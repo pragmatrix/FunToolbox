@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\FSharp.Core.4.0.0.1\lib\net40\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FsUnit.NUnit">
@@ -77,8 +77,8 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FunToolbox2\FunToolbox2.fsproj">
-      <Name>FunToolbox2</Name>
+    <ProjectReference Include="..\FunToolbox\FunToolbox.fsproj">
+      <Name>FunToolbox</Name>
       <Project>{060c0c2c-97c5-46bb-a139-464225480840}</Project>
       <Private>True</Private>
     </ProjectReference>
