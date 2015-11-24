@@ -18,7 +18,7 @@ module SortedArray =
         let (SortedArray a) = sa
         a
 
-    /// Converts a SortedArray to an list
+    /// Converts a SortedArray to a list
     let toList (sa: 'v sarray) = 
         sa |> toArray |> Array.toList
 
