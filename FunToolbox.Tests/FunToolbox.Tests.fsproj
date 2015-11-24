@@ -51,7 +51,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CollectionTests.fs" />
+    <Compile Include="SortedArrayTests.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
