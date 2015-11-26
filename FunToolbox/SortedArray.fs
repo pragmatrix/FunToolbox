@@ -1,6 +1,8 @@
 ﻿namespace FunToolbox
 
 type 'v sarray = SortedArray of 'v array
+    with
+    member this.length = let (SortedArray x) = this in x.Length
 
 module SortedArray =
     
@@ -30,7 +32,7 @@ module SortedArray =
     /// array if none found)
     let lowerBound low (sa: 'v sarray) = 
         let first = Array.BinarySearch(sa |> toArray, low)
-        if first < 0 then ~~~first else first
+        if first >= 0 then first else ~~~first
 
     /// Returns the upper bound (the index of the value + 1, or the next larger one, or the length of the
     /// array if none found)
@@ -56,3 +58,5 @@ module SortedArray =
     let contains (value: 'v) (sa: 'v sarray) : bool = 
         Array.BinarySearch(sa |> toArray, value) >= 0
 
+    let length (sa: 'v sarray) : int = 
+        sa.length
