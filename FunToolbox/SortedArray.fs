@@ -40,7 +40,7 @@ module SortedArray =
         let last = Array.BinarySearch(sa |> toArray, high)
         if last >= 0 then last + 1 else ~~~last
 
-    /// Returns the sorted sequence ragne of values from low to high (including)
+    /// Returns the sorted sequence range of values from low to high (including)
     let range (low: 'v, high: 'v) (sa: 'v sarray) : 'v seq =
         let lower = lowerBound low sa
         let upper = upperBound high sa
