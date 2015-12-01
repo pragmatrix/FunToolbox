@@ -43,6 +43,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Prelude.fs" />
     <Compile Include="Atom.fs" />
     <Compile Include="SortedArray.fs" />
     <Compile Include="AssemblyInfo.fs" />
