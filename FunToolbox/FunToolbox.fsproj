@@ -7,12 +7,12 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>060c0c2c-97c5-46bb-a139-464225480840</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FunToolbox2</RootNamespace>
+    <RootNamespace>FunToolbox</RootNamespace>
     <AssemblyName>FunToolbox</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>FunToolbox2</Name>
+    <Name>FunToolbox</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

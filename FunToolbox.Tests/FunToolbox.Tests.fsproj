@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>8f2725d4-78d5-4285-8930-219111cbb428</ProjectGuid>
+    <ProjectGuid>8F2725D4-78D5-4285-8930-219111CBB428</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>FunToolbox.Tests</RootNamespace>
     <AssemblyName>FunToolbox.Tests</AssemblyName>
@@ -13,6 +13,7 @@
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>FunToolbox.Tests</Name>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +54,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="SortedArrayTests.fs" />
     <Content Include="packages.config" />
+    <Content Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
