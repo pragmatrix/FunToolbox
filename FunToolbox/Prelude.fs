@@ -22,7 +22,16 @@ module Prelude =
             this.StartsWith(part, StringComparison.Ordinal)
         member this.endsWith part = 
             this.EndsWith(part, StringComparison.Ordinal)
+    
+    module List =
+        let inline flatten l = List.collect id l
 
+    module Seq = 
+        let inline flatten s = Seq.collect id s
+
+    module Array = 
+        let inline flatten a = Array.collect id a
+        
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
     ()    
