@@ -25,6 +25,10 @@ module Prelude =
     
     module List =
         let inline flatten l = List.collect id l
+        let rec revAndPrepend a l = 
+            match a with
+            | next :: rest -> revAndPrepend rest (next::l) 
+            | [] -> l
 
     module Seq = 
         let inline flatten s = Seq.collect id s
