@@ -35,6 +35,8 @@ module Prelude =
 
     module Array = 
         let inline flatten a = Array.collect id a
+
+    type 't actor = MailboxProcessor<'t>
         
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
