@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <Tailcalls>false</Tailcalls>
+    <Tailcalls>true</Tailcalls>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Prelude.fs" />
     <Compile Include="Atom.fs" />
+    <Compile Include="AtomFile.fs" />
     <Compile Include="SortedArray.fs" />
     <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
