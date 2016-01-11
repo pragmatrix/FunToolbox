@@ -82,15 +82,19 @@ module AtomFile =
         
         let output = f input
         output |> setData fs
+        output
 
     module Swapper = 
 
+        let getString (e: Encoding) (value: byte[] option)  =
+            value |> Option.map (fun b -> e.GetString(b))
+
+        let setString (e: Encoding) (value: string option) = 
+            value |> Option.map (fun str -> e.GetBytes(str))
+
         /// Convert a string swap function to a byte array swap function.
         let string (e: Encoding) (f: string option -> string option) : (byte[] option -> byte[] option) = 
-            Option.map (fun b -> e.GetString(b)) 
-            >> f
-            >> Option.map (fun str -> e.GetBytes(str))
-                
+            getString e >> f >> setString e
                 
 
         
