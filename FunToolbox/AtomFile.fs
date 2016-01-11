@@ -13,27 +13,9 @@ module AtomFile =
         let is (test: byte[]) = 
             test.Length = len && 
             Array.compareWith (fun (l: byte) (r: byte) -> l.CompareTo(r)) data test = 0
-             
-    let swap (f: byte[] option -> byte[] option) fn = 
 
-        let rec openFile() = 
-            let ts = 
-                try
-                    File.Open(fn, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)
-                with 
-                    // be very specific about the error we tolerate here!
-                    | :? IOException as e ->
-                    //
-                    if e.HResult = 0x80070020 then
-                        null
-                    else reraise()
-            // we can not tail-recurse in exception handlers, so we do that here
-            match ts with 
-            | null -> 
-                Thread.Sleep(1)
-                openFile()
-            | ts -> ts
-
+    [<AutoOpen>]
+    module private Helper =
         let read (bytes: int) (fs: FileStream) : byte[] = 
             let a = Array.zeroCreate bytes
             if bytes <> fs.Read(a, 0, bytes) then
@@ -45,6 +27,25 @@ module AtomFile =
 
         let truncate (fs: FileStream) = 
             fs.SetLength(0 |> int64)
+
+    /// Atomically exchanges the contents of a file.         
+    let swap (f: byte[] option -> byte[] option) fn = 
+
+        let rec openFile() = 
+            let ts = 
+                try
+                    File.Open(fn, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)
+                with 
+                    // be very specific about the error we tolerate here!
+                    | :? IOException as e ->
+                    if e.HResult = 0x80070020 then null
+                    else reraise()
+            // we can not tail-recurse in exception handlers, so we do that here
+            match ts with 
+            | null -> 
+                Thread.Sleep(1)
+                openFile()
+            | ts -> ts
 
         use fs = openFile()
         let l = fs.Length
@@ -69,6 +70,8 @@ module AtomFile =
                 reraise()
 
     module Swapper = 
+
+        /// Convert a string swap function to a byte array swap function.
         let string (e: Encoding) (f: string option -> string option) : (byte[] option -> byte[] option) = 
             Option.map (fun b -> e.GetString(b)) 
             >> f
