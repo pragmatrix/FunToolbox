@@ -16,22 +16,7 @@ module AtomFile =
 
     [<AutoOpen>]
     module private Helper =
-        let read (bytes: int) (fs: FileStream) : byte[] = 
-            let a = Array.zeroCreate bytes
-            if bytes <> fs.Read(a, 0, bytes) then
-                failwith "failed to read from file"
-            a
-
-        let write (bytes: byte[]) (fs: FileStream) =
-            fs.Write(bytes, 0, bytes.Length)
-
-        let truncate (fs: FileStream) = 
-            fs.SetLength(0 |> int64)
-
-    /// Atomically exchanges the contents of a file.         
-    let swap (f: byte[] option -> byte[] option) fn = 
-
-        let rec openFile() = 
+        let rec openFile fn = 
             let ts = 
                 try
                     File.Open(fn, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)
@@ -44,30 +29,59 @@ module AtomFile =
             match ts with 
             | null -> 
                 Thread.Sleep(1)
-                openFile()
+                openFile fn
             | ts -> ts
 
-        use fs = openFile()
-        let l = fs.Length
-        let li = l |> int
-        let input = 
+        let read (bytes: int) (fs: FileStream) : byte[] = 
+            let a = Array.zeroCreate bytes
+            if bytes <> fs.Read(a, 0, bytes) then
+                failwith "failed to read from file"
+            a
+
+        let write (bytes: byte[]) (fs: FileStream) =
+            fs.Write(bytes, 0, bytes.Length)
+
+        let truncate (fs: FileStream) = 
+            fs.SetLength(0 |> int64)
+
+        let getData (fs: FileStream) =
+            let l = fs.Length
+            let li = l |> int
             if li = 0 then None
             else
             let header = fs |> read Header.len
             if Header.is header |> not then
                 failwith "failed to read header"
             fs |> read (li - Header.len) |> Some
+
+        let setData (fs: FileStream) (data: byte[] option) =
+            fs |> truncate
+            if data.IsSome then
+                try
+                    fs |> write Header.data
+                    fs |> write data.Value
+                with _ ->
+                    // be sure file is empty when writing fails.
+                    fs |> truncate
+                    reraise()
+
+    /// Sets the contents of an atomic file. Creates it, if it's not existing.
+    let set data fn = 
+        use fs = openFile fn
+        setData fs data
+
+    /// Get the contents of a atomic file.
+    let value fn = 
+        use fs = openFile fn
+        getData fs
+
+    /// Atomically exchanges the contents of a file.         
+    let swap (f: byte[] option -> byte[] option) fn = 
+        use fs = openFile fn
+        let input = getData fs
         
         let output = f input
-        fs |> truncate
-        if output.IsSome then
-            try
-                fs |> write Header.data
-                fs |> write output.Value
-            with _ ->
-                // be sure file is empty when writing fails.
-                fs |> truncate
-                reraise()
+        output |> setData fs
 
     module Swapper = 
 
