@@ -18,7 +18,7 @@ type AtomFileTests() =
         let fn = "test.atomfile"
         use fs = File.Open(fn, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)
 
-        let thread = new Thread(fun () -> AtomFile.swap id fn)
+        let thread = new Thread(fun () -> AtomFile.swap id fn |> ignore)
         thread.Start()
         Thread.Sleep(100)
         thread.IsAlive |> should be True
@@ -37,7 +37,7 @@ type AtomFileTests() =
         let swapFunction = AtomFile.Swapper.string Encoding.UTF8 swapFunction
 
         let rec countAddThread() = 
-            AtomFile.swap swapFunction fn
+            AtomFile.swap swapFunction fn |> ignore
             countAddThread()
 
         let thread1 = new Thread(countAddThread)
