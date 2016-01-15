@@ -37,7 +37,13 @@ module Prelude =
         let inline flatten a = Array.collect id a
 
     type 't actor = MailboxProcessor<'t>
-        
+
+    /// Convert a function to an IDisposable.Dispose(), useful for building return values
+    /// that can be used for `use` constructs.
+    let asDisposable f = 
+        { new IDisposable with
+            member this.Dispose() = f() }
+ 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
     ()    
