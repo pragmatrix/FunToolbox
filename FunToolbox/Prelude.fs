@@ -74,6 +74,10 @@ module Prelude =
                         owned.dispose()
             }
 
+        let lift instance = {
+                instance = instance
+                destructor = id
+            }
 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
