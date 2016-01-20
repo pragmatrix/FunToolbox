@@ -36,7 +36,8 @@ module Prelude =
     module Array = 
         let inline flatten a = Array.collect id a
 
-    type 't actor = MailboxProcessor<'t>
+    type Agent<'t> = MailboxProcessor<'t>
+    type 't agent = Agent<'t>
 
     /// Convert a function to an IDisposable.Dispose(), useful for building return values
     /// that can be used for `use` constructs.
