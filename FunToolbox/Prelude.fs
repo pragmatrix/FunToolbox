@@ -64,6 +64,17 @@ module Prelude =
                 destructor = destructor
             }
 
+        /// Create a scoped lifetime instance that owns another in term of the lifetime. 
+        /// The owned scope is disposed after the inner scope. 
+        let owns (owned: ScopedInstance<_>) (scoped: ScopedInstance<_>) = {
+                instance = scoped.instance
+                destructor = 
+                    fun () ->
+                        scoped.dispose()
+                        owned.dispose()
+            }
+
+
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
     ()    
