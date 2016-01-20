@@ -45,6 +45,25 @@ module Prelude =
         { new IDisposable with
             member this.Dispose() = f() }
  
+    [<RequireQualifiedAccess>]
+    module Lifetime =
+        /// A disposable instance that can be used inside a 'use' code block.
+        type ScopedInstance<'t> = {
+            destructor: unit -> unit
+            instance : 't
+        }
+        with
+            interface IDisposable with
+                member this.Dispose() = this.dispose()
+            member this.dispose() = this.destructor()
+
+        /// Create a scoped and IDisposable record that transports another instance 
+        /// and a destructor that is called when Dispose() is invoked.
+        let scoped destructor instance  = {
+                instance = instance
+                destructor = destructor
+            }
+
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
     ()    
