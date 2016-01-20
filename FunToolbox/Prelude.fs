@@ -59,7 +59,7 @@ module Prelude =
 
         /// Create a scoped and IDisposable record that transports another instance 
         /// and a destructor that is called when Dispose() is invoked.
-        let scoped destructor instance  = {
+        let endsWith destructor instance  = {
                 instance = instance
                 destructor = destructor
             }
