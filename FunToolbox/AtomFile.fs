@@ -75,8 +75,10 @@ module AtomFile =
         use fs = openFile fn
         getData fs
 
+    type SwapFunction = byte[] option -> byte[] option
+
     /// Atomically exchanges the contents of a file.         
-    let swap (f: byte[] option -> byte[] option) fn = 
+    let swap (f: SwapFunction) fn = 
         use fs = openFile fn
         let input = getData fs
         

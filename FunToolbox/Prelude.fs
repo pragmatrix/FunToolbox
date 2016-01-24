@@ -4,7 +4,12 @@ module Prelude =
 
     open System
 
-    [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+    type CRAttribute = CompilationRepresentationAttribute
+
+    [<Literal>]
+    let ModuleSuffix = CompilationRepresentationFlags.ModuleSuffix
+
+    [<CR(ModuleSuffix)>]
     module Option =
 
         /// Return the value of the option, if it is Some v, or elseValue when it is None.
