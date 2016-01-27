@@ -51,6 +51,6 @@ type AtomFileTests() =
         thread1.Join()
         thread2.Join()
 
-        let data = AtomFile.value fn
+        let data = AtomFile.read fn
         let value = data.Value |> fun bytes -> Encoding.UTF8.GetString(bytes)
         System.Console.WriteLine("counter: " + value)

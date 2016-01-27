@@ -65,13 +65,13 @@ module AtomFile =
                     fs |> truncate
                     reraise()
 
-    /// Sets the contents of an atomic file. Creates it, if it's not existing.
-    let set data fn = 
+    /// Writes contents to an atomic file. Creates it, if it's not existing.
+    let write fn data = 
         use fs = openFile fn
         setData fs data
 
-    /// Get the contents of a atomic file.
-    let value fn = 
+    /// Reads the contents of a atomic file.
+    let read fn = 
         use fs = openFile fn
         getData fs
 
@@ -86,17 +86,19 @@ module AtomFile =
         output |> setData fs
         output
 
-    module Swapper = 
-
-        let getString (e: Encoding) (value: byte[] option)  =
+    module Decode =
+        let toString (e: Encoding) (value: byte[] option)  =
             value |> Option.map (fun b -> e.GetString(b))
 
-        let setString (e: Encoding) (value: string option) = 
+    module Encode =
+        let fromString (e: Encoding) (value: string option) = 
             value |> Option.map (fun str -> e.GetBytes(str))
+
+    module Swapper = 
 
         /// Convert a string swap function to a byte array swap function.
         let string (e: Encoding) (f: string option -> string option) : (byte[] option -> byte[] option) = 
-            getString e >> f >> setString e
+            Decode.toString e >> f >> Encode.fromString e
                 
 
         
