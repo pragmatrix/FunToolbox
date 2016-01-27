@@ -45,7 +45,7 @@ module LifetimeExtensions =
             member this.destructor = 
                 this._instance |> snd
 
-        // Returns a clone of the given handle and removes the destructor from the original.
+        /// Returns a clone of the given handle and removes the destructor from the original.
         let detach (handle: 't handle) : 't handle = 
             let r = { _instance = handle._instance }
             // instance_ = handle.instance, handle.destructor }
@@ -59,7 +59,7 @@ module LifetimeExtensions =
             let outer = detach outer
             let inner = detach inner
             { _instance = inner.instance, fun() -> inner.dispose(); outer.dispose() }
-
+        
         /// Convert a instance / destructor pair a lifetime handle.
         let lift v =  { _instance = v }
 
@@ -67,6 +67,12 @@ module LifetimeExtensions =
         let liftDisposable (instance: 't when 't :> IDisposable) =
             { _instance = instance, fun() -> instance.Dispose()}
 
+        /// Detaches the handle and returns a new handle with the changed instance and the of 
+        /// the handle passed in.
+        let map (f: 't -> 'i) (handle: 't handle) : 'i handle =
+            let handle = detach handle
+            (f handle.instance, handle.destructor)
+            |> lift
 
 [<AutoOpen("FunToolbox.LifetimeExtensions")>]
 do ()     
