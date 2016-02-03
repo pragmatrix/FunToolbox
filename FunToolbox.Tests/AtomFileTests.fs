@@ -36,21 +36,30 @@ type AtomFileTests() =
 
         let swapFunction = AtomFile.Swapper.string Encoding.UTF8 swapFunction
 
-        let rec countAddThread() = 
-            AtomFile.swap swapFunction fn |> ignore
-            countAddThread()
+        let cancellation = new CancellationTokenSource()
+        let token = cancellation.Token
 
-        let thread1 = new Thread(countAddThread)
-        let thread2 = new Thread(countAddThread)
+        let minimumRounds = 100
+
+        let rec countAddThread cnt = 
+            if token.IsCancellationRequested && cnt > minimumRounds then
+                ()
+            else
+            AtomFile.swap swapFunction fn |> ignore
+            countAddThread (cnt+1)
+
+
+        let thread1 = new Thread(fun () -> countAddThread 0)
+        let thread2 = new Thread(fun () -> countAddThread 0)
         thread1.Start()
         thread2.Start()
 
         Thread.Sleep(100)
-        thread1.Abort()
-        thread2.Abort()
+        cancellation.Cancel()
         thread1.Join()
         thread2.Join()
 
         let data = AtomFile.read fn
+        data.IsSome |> should be True
         let value = data.Value |> fun bytes -> Encoding.UTF8.GetString(bytes)
         System.Console.WriteLine("counter: " + value)
