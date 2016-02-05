@@ -47,6 +47,7 @@
     <Compile Include="Lifetime.fs" />
     <Compile Include="Atom.fs" />
     <Compile Include="AtomFile.fs" />
+    <Compile Include="FileSystem.fs" />
     <Compile Include="SortedArray.fs" />
     <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
