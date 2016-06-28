@@ -1,8 +1,10 @@
 ﻿namespace FunToolbox
 
+open System
+open System.Threading.Tasks
+
 module Prelude =
 
-    open System
 
     type CRAttribute = CompilationRepresentationAttribute
 
@@ -49,6 +51,15 @@ module Prelude =
     let asDisposable f = 
         { new IDisposable with
             member this.Dispose() = f() }
+
+    /// Extend AsyncBuilder with the option bind tasks without using Async.AwaitTask. 
+    /// This is experimental, so only Bind is supported for now.
+    type AsyncBuilder with
+        member this.Bind(t: Task<'t>, f: 't -> Async<'r>) : Async<'r> = 
+            this.Bind(t |> Async.AwaitTask, f)
+
+    /// A predicate & combinator.
+    let (<&>) f g = (fun x -> f x && g x)
 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
