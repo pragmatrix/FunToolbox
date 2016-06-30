@@ -57,6 +57,13 @@ module Prelude =
     type AsyncBuilder with
         member this.Bind(t: Task<'t>, f: 't -> Async<'r>) : Async<'r> = 
             this.Bind(t |> Async.AwaitTask, f)
+        member this.Bind(t: Task, f: unit -> Async<'r>) : Async<'r> = 
+            this.Bind(t |> Async.AwaitTask, f)
+
+        member this.ReturnFrom(t : Task<'r>) : Async<'r> = 
+            t |> Async.AwaitTask
+        member this.ReturnFrom(t : Task) : Async<unit> = 
+            t |> Async.AwaitTask
 
     /// A predicate & combinator.
     let (<&>) f g = (fun x -> f x && g x)
