@@ -1,14 +1,12 @@
 ﻿namespace FunToolbox.Tests
 
-open NUnit.Framework
-open FsUnit
-
-open FunToolbox
-
 open System
 open System.IO
 open System.Threading
 open System.Text
+open NUnit.Framework
+open FsUnit
+open FunToolbox
 
 [<TestFixture>]
 type AtomFileTests() =

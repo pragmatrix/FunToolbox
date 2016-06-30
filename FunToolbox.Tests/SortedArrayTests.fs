@@ -2,7 +2,6 @@
 
 open NUnit.Framework
 open FsUnit
-
 open FunToolbox
 
 [<TestFixture>]
