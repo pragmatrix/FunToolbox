@@ -48,8 +48,8 @@ module Graph =
         |> List.map (fun (k, v) -> k, v |> List.map snd)
         |> Graph
 
-    let ofFans (l: ('t * 't list) list) = 
-        l 
+    let ofFans (fans: ('t * 't list) list) = 
+        fans 
         |> List.groupBy fst
         |> List.map (fun (k, v) -> k, v |> List.collect snd)
         |> Graph
