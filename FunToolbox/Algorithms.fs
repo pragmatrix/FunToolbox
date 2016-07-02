@@ -4,13 +4,14 @@ open System.Linq
 open FunToolbox.Prelude
 open System.Collections.Generic
 
-/// Directed, acyclic graphs
-module DAG = 
+/// A directed graphs
+type Graph<'t> = private Graph of ('t * 't list) list
+type 't graph = Graph<'t>
+
+[<CR(ModuleSuffix)>]
+module Graph = 
 
     exception CycleFoundException
-
-    type Graph<'t> = private Graph of ('t * 't list) list
-    type 't graph = Graph<'t>
 
     let sortTopologically (Graph graph) = 
 

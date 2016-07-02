@@ -11,11 +11,10 @@ type A =
 
 type Recipe = Eggs | Milk | Wheat | Mix | Cook | Serve
 
-
 [<TestFixture>]
 type AlgorithmsTests() = 
 
-    let sortEdges = DAG.ofEdges >> DAG.sortTopologically
+    let sortEdges = Graph.ofEdges >> Graph.sortTopologically
     let graph = [ 
             Wheat, [Eggs;Milk;Mix] ;
             Milk,  [Mix] ;
@@ -39,16 +38,16 @@ type AlgorithmsTests() =
     [<Test>]
     member this.SortsTopologically3() = 
         graph
-        |> DAG.ofList
-        |> DAG.sortTopologically
+        |> Graph.ofList
+        |> Graph.sortTopologically
         |> should equal [Wheat; Milk; Eggs; Mix; Cook; Serve]
 
-    [<Test;ExpectedException(typeof<DAG.CycleFoundException>)>]
+    [<Test;ExpectedException(typeof<Graph.CycleFoundException>)>]
     member this.DetectsCycles() = 
         [(A, B); (C, A); (B, A)]
         |> sortEdges
 
-    [<Test;ExpectedException(typeof<DAG.CycleFoundException>)>]
+    [<Test;ExpectedException(typeof<Graph.CycleFoundException>)>]
     member this.SelfCycle() = 
         [(A, A)]
         |> sortEdges
