@@ -18,6 +18,9 @@ module Prelude =
             match option with
             | Some v -> v
             | None -> elseValueF()
+        
+        let ofBool b = 
+            if b then Some () else None
 
     /// Equivalent to the <| operator, but with a more useful priority to separate funs, etc.
     let inline (--) a b = a b
@@ -42,6 +45,8 @@ module Prelude =
     module Array = 
         let inline flatten a = Array.collect id a
 
+    let inline flip f a b = f b a          
+    
     type Agent<'t> = MailboxProcessor<'t>
     type 't agent = Agent<'t>
 
@@ -66,6 +71,36 @@ module Prelude =
 
     /// A predicate & combinator.
     let (<&>) f g = (fun x -> f x && g x)
+
+    // https://github.com/fsprojects/FSharpx.Extras/blob/master/src/FSharpx.Extras/ComputationExpressions/Monad.fs
+    /// The maybe monad.
+    /// This monad is my own and uses an 'T option. Others generally make their own Maybe<'T> type from Option<'T>.
+    /// The builder approach is from Matthew Podwysocki's excellent Creating Extended Builders series http://codebetter.com/blogs/matthew.podwysocki/archive/2010/01/18/much-ado-about-monads-creating-extended-builders.aspx.
+    type MaybeBuilder() =
+        member __.Return(x) = Some x
+        member __.ReturnFrom(m: 'T option) = m
+        member __.Bind(m, f) = Option.bind f m
+        member __.Zero() = None
+        member __.Combine(m, f) = Option.bind f m
+        member __.Delay(f: unit -> _) = f
+        member __.Run(f) = f()
+        member this.TryWith(m, h) =
+            try this.ReturnFrom(m)
+            with e -> h e
+        member this.TryFinally(m, compensation) =
+            try this.ReturnFrom(m)
+            finally compensation()
+        member this.Using(res:#IDisposable, body) =
+            this.TryFinally(body res, fun () -> match res with null -> () | disp -> disp.Dispose())
+        member this.While(guard, f) =
+            if not (guard()) then Some () else
+            do f() |> ignore
+            this.While(guard, f)
+        member this.For(sequence:seq<_>, body) =
+            this.Using(sequence.GetEnumerator(),
+                fun enum -> this.While(enum.MoveNext, this.Delay(fun () -> body enum.Current)))
+
+    let maybe = MaybeBuilder()
 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
