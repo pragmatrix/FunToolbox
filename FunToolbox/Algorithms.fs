@@ -23,8 +23,8 @@ module Graph =
         let dfs result start_node = 
 
             // there is only one path when we run a depth first search, 
-            // so we can optimize this by using an immutable HashSet, instead of Set or a List. 
-            // For the set, this also this avoids the comparison constraint
+            // so we can optimize this by using a mutable HashSet, instead of Set or a List. 
+            // This also this avoids the comparison constraint that a Set would introduce.
             let path = HashSet<'t>()
 
             let rec explore result node = 
