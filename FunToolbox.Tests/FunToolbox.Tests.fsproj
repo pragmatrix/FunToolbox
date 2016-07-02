@@ -54,6 +54,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="SortedArrayTests.fs" />
     <Compile Include="AtomFileTests.fs" />
+    <Compile Include="AlgorithmsTests.fs" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
   </ItemGroup>

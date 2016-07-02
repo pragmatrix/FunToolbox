@@ -50,6 +50,7 @@
     <Compile Include="FileSystem.fs" />
     <Compile Include="SortedArray.fs" />
     <Compile Include="Synchronized.fs" />
+    <Compile Include="Algorithms.fs" />
     <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
   <PropertyGroup>
