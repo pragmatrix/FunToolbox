@@ -5,7 +5,6 @@ open System.Threading.Tasks
 
 module Prelude =
 
-
     type CRAttribute = CompilationRepresentationAttribute
 
     [<Literal>]
