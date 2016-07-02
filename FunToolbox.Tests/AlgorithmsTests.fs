@@ -38,7 +38,7 @@ type AlgorithmsTests() =
     [<Test>]
     member this.SortsTopologically3() = 
         graph
-        |> Graph.ofList
+        |> Graph.ofFans
         |> Graph.sortTopologically
         |> should equal [Wheat; Milk; Eggs; Mix; Cook; Serve]
 

@@ -4,7 +4,7 @@ open System.Linq
 open FunToolbox.Prelude
 open System.Collections.Generic
 
-/// A directed graphs
+/// A directed graph
 type Graph<'t> = private Graph of ('t * 't list) list
 type 't graph = Graph<'t>
 
@@ -48,7 +48,7 @@ module Graph =
         |> List.map (fun (k, v) -> k, v |> List.map snd)
         |> Graph
 
-    let ofList (l: ('t * 't list) list) = 
+    let ofFans (l: ('t * 't list) list) = 
         l 
         |> List.groupBy fst
         |> List.map (fun (k, v) -> k, v |> List.collect snd)
