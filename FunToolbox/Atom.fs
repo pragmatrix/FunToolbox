@@ -1,7 +1,9 @@
 ﻿namespace FunToolbox
 
-/// An atom can only modify a value and return it. 'v -> 'v is the modification, which returns the
-/// result (the 3rd 'v). 
+/// An atom represents an atomic mutable variable. 
+/// The basic definition (apply) can only modify a value and return it. 
+/// All other primitive operations like snapshot or reset implemented in terms of apply.
+/// 'v -> 'v is the modification, which returns the result (the 3rd 'v). 
 type 'v atom = ('v -> 'v) -> 'v
 
 module Atom =
@@ -27,6 +29,7 @@ module Atom =
         |> ignore
 
     /// Generate a limited capability to modify an atom. This also returns an atom.
+    /// This is similar to a lense.
     let limit (f: 's -> ('n -> 'n) -> 's) (s: 's atom) : ('n atom) =
         fun (m: 'n -> 'n) ->
             let mutable c = Unchecked.defaultof<'n>
