@@ -37,7 +37,7 @@ module Atom =
             apply (fun s -> f s mCapture) s |> ignore
             c 
 
-    /// Generate a function that returns the value of an atom.
+    /// Generate a function that returns snapshots of an atom when called.
     let snapshotOnly (a: 's atom) = 
         fun () ->
             a id
