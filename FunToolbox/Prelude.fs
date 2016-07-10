@@ -19,6 +19,11 @@ module Prelude =
             | Some v -> v
             | None -> elseValueF()
         
+        let inline orElseConst elseValue option = 
+            match option with
+            | Some v -> v
+            | None -> elseValue
+
         let ofBool b = 
             if b then Some () else None
 
