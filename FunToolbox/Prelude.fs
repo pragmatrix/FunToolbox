@@ -19,13 +19,21 @@ module Prelude =
             | Some v -> v
             | None -> elseValueF()
         
+        /// Return the value of the option, or elseValue when it is None.
         let inline orElseConst elseValue option = 
             match option with
             | Some v -> v
             | None -> elseValue
 
-        let ofBool b = 
+        /// Returns Some () for true, and None for false
+        let inline ofBool b = 
             if b then Some () else None
+
+        /// Returns Some v if the value can be cast to the given type.
+        let inline cast<'rt> (v: obj) : ('rt option) = 
+            match v with
+            | :? 'rt as v -> Some v
+            | _ -> None
 
     /// Equivalent to the <| operator, but with a more useful priority to separate funs, etc.
     let inline (--) a b = a b
