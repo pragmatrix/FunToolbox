@@ -46,11 +46,13 @@ type AlgorithmsTests() =
     member this.DetectsCycles() = 
         [(A, B); (C, A); (B, A)]
         |> sortEdges
+        |> ignore
 
     [<Test;ExpectedException(typeof<Graph.CycleFoundException>)>]
     member this.SelfCycle() = 
         [(A, A)]
         |> sortEdges
+        |> ignore
 
     [<Test>]
     member this.Empty() = 
