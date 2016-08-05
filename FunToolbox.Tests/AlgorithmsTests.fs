@@ -24,35 +24,39 @@ type AlgorithmsTests() =
             Serve, [] ]
     
     [<Test>]
-    member this.SortsTopologically() = 
+    member __.SortsTopologically() = 
         [(B, A); (C, A); (C, B)]
         |> sortEdges
         |> should equal [C; B; A]
 
     [<Test>]
-    member this.SortsTopologically2() = 
+    member __.SortsTopologically2() = 
         [(B, A); (C, A); (B, C)]
         |> sortEdges
         |> should equal [B; C; A]
 
     [<Test>]
-    member this.SortsTopologically3() = 
+    member __.SortsTopologically3() = 
         graph
         |> Graph.ofFans
         |> Graph.sortTopologically
         |> should equal [Wheat; Milk; Eggs; Mix; Cook; Serve]
 
-    [<Test;ExpectedException(typeof<Graph.CycleFoundException>)>]
-    member this.DetectsCycles() = 
-        [(A, B); (C, A); (B, A)]
-        |> sortEdges
-        |> ignore
+    [<Test>]
+    member __.DetectsCycles() = 
+        fun () ->
+            [(A, B); (C, A); (B, A)]
+            |> sortEdges
+            |> ignore
+        |> should throw typeof<Graph.CycleFoundException>
 
-    [<Test;ExpectedException(typeof<Graph.CycleFoundException>)>]
-    member this.SelfCycle() = 
-        [(A, A)]
-        |> sortEdges
-        |> ignore
+    [<Test>]
+    member __.SelfCycle() = 
+        fun () -> 
+            [(A, A)]
+            |> sortEdges
+            |> ignore
+        |> should throw typeof<Graph.CycleFoundException>
 
     [<Test>]
     member this.Empty() = 

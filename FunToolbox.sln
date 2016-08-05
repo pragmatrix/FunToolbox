@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{B99638DB-81E0-4F2E-B53E-350A8F666A91}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FunToolbox", "FunToolbox\FunToolbox.fsproj", "{060C0C2C-97C5-46BB-A139-464225480840}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FunToolbox.Tests", "FunToolbox.Tests\FunToolbox.Tests.fsproj", "{8F2725D4-78D5-4285-8930-219111CBB428}"
