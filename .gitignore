@@ -3,5 +3,5 @@ obj/
 *.ncrunchproject
 /.vs/
 *.user
-packages/
+/packages/
 /.paket/paket.exe
