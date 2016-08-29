@@ -1,155 +1,159 @@
-﻿namespace FunToolbox.Tests
+﻿module FunToolbox.Tests.SortedArrayTests
 
-open NUnit.Framework
 open FsUnit
+open Xunit
 open FunToolbox
 
-[<TestFixture>]
-type SortedArrayTests() =
-
-    [<Test>]
-    member this.sortedArrayRangeMatchingTests() = 
-        let array = 
-            [0;1;2;3;4]
-            |> SortedArray.ofSeq
-        
-        // end range, matching
-        array
-        |> SortedArray.range (1,4)
-        |> should equal [1;2;3;4]
-
-        // begin range, matching
-        array
-        |> SortedArray.range (0,1)
-        |> should equal [0;1]
-
-        // inner range, matching
-        array
-        |> SortedArray.range (1,3)
-        |> should equal [1;2;3]
-
-        // too low, matching
-        array
-        |> SortedArray.range (-1,2)
-        |> should equal [0;1;2]
-        
-        // too high, matching
-        array
-        |> SortedArray.range (3,5)
-        |> should equal [3;4]
-
-        // one element, matching
-        array
-        |> SortedArray.range (2,2)
-        |> should equal [2]
-
-        // first element, matching
-        array
-        |> SortedArray.range (0,0)
-        |> should equal [0]
-
-        // last element, matching
-        array
-        |> SortedArray.range (4,4)
-        |> should equal [4]
-
-    [<Test>]
-    member this.sortedArrayRangeNonMatchingTests() = 
-        
-        let array = 
-            [0;2;4;6;8] 
-            |> SortedArray.ofSeq
-
-        // end range
-        array
-        |> SortedArray.range (5,9)
-        |> should equal [6;8]
-
-        // begin range
-        array
-        |> SortedArray.range (-1,3)
-        |> should equal [0;2]
-
-        // inner range
-        array
-        |> SortedArray.range (3,7)
-        |> should equal [4;6]
-
-        // too low
-        array
-        |> SortedArray.range (-1,3)
-        |> should equal [0;2]
-        
-        // too high
-        array
-        |> SortedArray.range (5,9)
-        |> should equal [6;8]
-
-        // one element
-        array
-        |> SortedArray.range (1,3)
-        |> should equal [2]
-
-        // first element
-        array
-        |> SortedArray.range (0,1)
-        |> should equal [0]
-
-        // last element
-        array
-        |> SortedArray.range (7,8)
-        |> should equal [8]
-
-    [<Test>]
-    member this.sortedArrayRangeOutOfRangeTests() = 
-
-        let array = 
-            [0;1;2;3;4]
-            |> SortedArray.ofSeq
-
-        // range completely too low
-        array
-        |> SortedArray.range (-2,-1)
-        |> should equal []
-
-        // range completely too high
-        array
-        |> SortedArray.range (5,6)
-        |> should equal []
-
-        // invalid range
-        array
-        |> SortedArray.range (2,1)
-        |> should equal []
-
-        [] 
+[<Fact>]
+let sortedArrayRangeMatchingTests() = 
+    let array = 
+        [0;1;2;3;4]
         |> SortedArray.ofSeq
-        |> SortedArray.range(0,1)
-        |> should equal []
+        
+    // end range, matching
+    array
+    |> SortedArray.range (1,4)
+    |> Seq.toList 
+    |> should equal [1;2;3;4]
 
-    [<Test>]
-    member this.sortedArrayContains() = 
-        let array = 
-            [0;2]
-            |> SortedArray.ofSeq
+    // begin range, matching
+    array
+    |> SortedArray.range (0,1)
+    |> Seq.toList 
+    |> should equal [0;1]
 
-        array
-        |> SortedArray.contains 3
-        |> should equal false
+    // inner range, matching
+    array
+    |> SortedArray.range (1,3)
+    |> Seq.toList 
+    |> should equal [1;2;3]
 
-        array
-        |> SortedArray.contains 1
-        |> should equal false
+    // too low, matching
+    array
+    |> SortedArray.range (-1,2)
+    |> Seq.toList 
+    |> should equal [0;1;2]
+        
+    // too high, matching
+    array
+    |> SortedArray.range (3,5)
+    |> Seq.toList 
+    |> should equal [3;4]
 
-        array
-        |> SortedArray.contains 0
-        |> should equal true
+    // one element, matching
+    array
+    |> SortedArray.range (2,2)
+    |> Seq.toList 
+    |> should equal [2]
 
-        array
-        |> SortedArray.contains -1
-        |> should equal false
+    // first element, matching
+    array
+    |> SortedArray.range (0,0)
+    |> Seq.toList 
+    |> should equal [0]
 
-        array
-        |> SortedArray.contains 2
-        |> should equal true
+    // last element, matching
+    array
+    |> SortedArray.range (4,4)
+    |> Seq.toList 
+    |> should equal [4]
 
+[<Fact>]
+let sortedArrayRangeNonMatchingTests() = 
+        
+    let array = 
+        [0;2;4;6;8] 
+        |> SortedArray.ofSeq
+
+    // end range
+    array
+    |> SortedArray.range (5,9)
+    |> Seq.toList
+    |> should equal [6;8]
+
+    // begin range
+    array
+    |> SortedArray.range (-1,3)
+    |> Seq.toList
+    |> should equal [0;2]
+
+    // inner range
+    array
+    |> SortedArray.range (3,7)
+    |> Seq.toList
+    |> should equal [4;6]
+
+    // too low
+    array
+    |> SortedArray.range (-1,3)
+    |> Seq.toList
+    |> should equal [0;2]
+        
+    // too high
+    array
+    |> SortedArray.range (5,9)
+    |> Seq.toList
+    |> should equal [6;8]
+
+    // one element
+    array
+    |> SortedArray.range (1,3)
+    |> Seq.toList
+    |> should equal [2]
+
+    // first element
+    array
+    |> SortedArray.range (0,1)
+    |> Seq.toList
+    |> should equal [0]
+
+    // last element
+    array
+    |> SortedArray.range (7,8)
+    |> Seq.toList
+    |> should equal [8]
+
+[<Fact>]
+let sortedArrayRangeOutOfRangeTests() = 
+
+    let array = 
+        [0;1;2;3;4]
+        |> SortedArray.ofSeq
+
+    // range completely too low
+    array
+    |> SortedArray.range (-2,-1)
+    |> Seq.toList
+    |> should be Empty
+
+    // range completely too high
+    array
+    |> SortedArray.range (5,6)
+    |> Seq.toList
+    |> should be Empty
+
+    // invalid range
+    array
+    |> SortedArray.range (2,1)
+    |> Seq.toList
+    |> should be Empty
+
+    [] 
+    |> SortedArray.ofSeq
+    |> SortedArray.range(0,1)
+    |> should be Empty
+
+[<Theory>]
+[<InlineData(-1, false)>]
+[<InlineData(1, false)>]
+[<InlineData(3, false)>]
+[<InlineData(0, true)>]
+[<InlineData(2, true)>]
+let sortedArrayContains(value, containsIt: bool) = 
+    let array = 
+        [0;2]
+        |> SortedArray.ofSeq
+
+    array
+    |> SortedArray.contains value
+    |> should equal containsIt

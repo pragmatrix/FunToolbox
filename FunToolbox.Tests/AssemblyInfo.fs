@@ -8,7 +8,7 @@ open System.Runtime.InteropServices
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
 [<assembly: AssemblyProduct("FunToolbox.Tests")>]
-[<assembly: AssemblyCopyright("Copyright ©  2015")>]
+[<assembly: AssemblyCopyright("Copyright © 2016 Armin Sander")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
 

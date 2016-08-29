@@ -1,7 +1,7 @@
-﻿namespace FunToolbox.Tests
+﻿module FunToolbox.Tests.AlgorithmsTests
 
-open NUnit.Framework
 open FsUnit
+open Xunit
 open FunToolbox.Algorithms
 
 type A = 
@@ -11,58 +11,55 @@ type A =
 
 type Recipe = Eggs | Milk | Wheat | Mix | Cook | Serve
 
-[<TestFixture>]
-type AlgorithmsTests() = 
-
-    let sortEdges = Graph.ofEdges >> Graph.sortTopologically
-    let graph = [ 
-            Wheat, [Eggs;Milk;Mix] ;
-            Milk,  [Mix] ;
-            Cook,  [Serve] ;
-            Eggs,  [Mix] ;
-            Mix,   [Cook] ;
-            Serve, [] ]
+let sortEdges = Graph.ofEdges >> Graph.sortTopologically
+let graph = [ 
+    Wheat, [Eggs;Milk;Mix] ;
+    Milk,  [Mix] ;
+    Cook,  [Serve] ;
+    Eggs,  [Mix] ;
+    Mix,   [Cook] ;
+    Serve, [] ]
     
-    [<Test>]
-    member __.SortsTopologically() = 
-        [(B, A); (C, A); (C, B)]
+[<Fact>]
+let sortsTopologically() = 
+    [(B, A); (C, A); (C, B)]
+    |> sortEdges
+    |> should equal [C; B; A]
+
+[<Fact>]
+let sortsTopologically2() = 
+    [(B, A); (C, A); (B, C)]
+    |> sortEdges
+    |> should equal [B; C; A]
+
+[<Fact>]
+let sortsTopologically3() = 
+    graph
+    |> Graph.ofFans
+    |> Graph.sortTopologically
+    |> should equal [Wheat; Milk; Eggs; Mix; Cook; Serve]
+
+[<Fact>]
+let detectsCycles() = 
+    fun () ->
+        [(A, B); (C, A); (B, A)]
         |> sortEdges
-        |> should equal [C; B; A]
+        |> ignore
+    |> should throw typeof<Graph.CycleFoundException>
 
-    [<Test>]
-    member __.SortsTopologically2() = 
-        [(B, A); (C, A); (B, C)]
+[<Fact>]
+let selfCycle() = 
+    fun () -> 
+        [(A, A)]
         |> sortEdges
-        |> should equal [B; C; A]
+        |> ignore
+    |> should throw typeof<Graph.CycleFoundException>
 
-    [<Test>]
-    member __.SortsTopologically3() = 
-        graph
-        |> Graph.ofFans
-        |> Graph.sortTopologically
-        |> should equal [Wheat; Milk; Eggs; Mix; Cook; Serve]
-
-    [<Test>]
-    member __.DetectsCycles() = 
-        fun () ->
-            [(A, B); (C, A); (B, A)]
-            |> sortEdges
-            |> ignore
-        |> should throw typeof<Graph.CycleFoundException>
-
-    [<Test>]
-    member __.SelfCycle() = 
-        fun () -> 
-            [(A, A)]
-            |> sortEdges
-            |> ignore
-        |> should throw typeof<Graph.CycleFoundException>
-
-    [<Test>]
-    member this.Empty() = 
-        []
-        |> sortEdges
-        |> should equal []
+[<Fact>]
+let empty() = 
+    []
+    |> sortEdges
+    |> should be Empty
 
 
 
