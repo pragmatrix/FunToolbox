@@ -50,8 +50,9 @@
     <Compile Include="AtomFile.fs" />
     <Compile Include="FileSystem.fs" />
     <Compile Include="SortedArray.fs" />
-    <Compile Include="Synchronized.fs" />
+    <Compile Include="Synchronized.Queue.fs" />
     <Compile Include="Algorithms.fs" />
+    <Compile Include="Time.Timestamp.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

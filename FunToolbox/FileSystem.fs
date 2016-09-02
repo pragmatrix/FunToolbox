@@ -27,8 +27,8 @@ module private Helpers =
             
 /// Representation of a path. Always an absolute, full, rooted path with normalized
 /// Separators (all backslashes converted to forward slashes)
-type Path = Path of string
-    with
+type Path = 
+    | Path of string
     override this.ToString() = this.value
     member this.value = let (Path path) = this in path
     static member parse str =

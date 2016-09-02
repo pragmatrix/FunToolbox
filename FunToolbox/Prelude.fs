@@ -4,9 +4,9 @@ open System
 open System.Threading.Tasks
 
 type CRAttribute = CompilationRepresentationAttribute
+type RQAAttribute = RequireQualifiedAccessAttribute
 
-[<Literal>]
-let ModuleSuffix = CompilationRepresentationFlags.ModuleSuffix
+let [<Literal>] ModuleSuffix = CompilationRepresentationFlags.ModuleSuffix
 
 [<CR(ModuleSuffix)>]
 module Option =
