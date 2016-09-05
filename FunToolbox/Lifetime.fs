@@ -17,60 +17,55 @@
 ///
 /// Also note that Lifetime methods must only be used in the construction phase of a Lifetime
 /// container, because they use mutable variables.
-module FunToolbox.LifetimeExtensions
+[<RequireQualifiedAccess>]
+module FunToolbox.Lifetime
 
 open System
 
-[<RequireQualifiedAccess>]
-module Lifetime = 
-    
-    type 't instance = 't * (unit -> unit)
+type 't instance = 't * (unit -> unit)
 
-    type 't handle = {
-        // this does not need to be thread-safe owner changes should happen while
-        // instances are being constructed!
-        mutable _instance: 't instance
-    } with
-        interface IDisposable with
-            member this.Dispose() = 
-                this.dispose()
-        member this.dispose() =
-            this.destructor()
+type 't handle = private {
+    // this does not need to be thread-safe owner changes should happen while
+    // instances are being constructed!
+    mutable _Instance: 't instance
+} with
+    interface IDisposable with
+        member this.Dispose() = 
+            this.Dispose()
+    member this.Dispose() =
+        this.Destructor()
 
-        member this.instance = 
-            this._instance |> fst
-        member this.destructor = 
-            this._instance |> snd
+    member this.Instance = 
+        this._Instance |> fst
+    member this.Destructor = 
+        this._Instance |> snd
 
-    /// Returns a clone of the given handle and removes the destructor from the original.
-    let detach (handle: 't handle) : 't handle = 
-        let r = { _instance = handle._instance }
-        // instance_ = handle.instance, handle.destructor }
-        handle._instance <- handle.instance, id
-        r
+/// Returns a clone of the given handle and removes the destructor from the original.
+let detach (handle: 't handle) : 't handle = 
+    let r = { _Instance = handle._Instance }
+    // instance_ = handle.instance, handle.destructor }
+    handle._Instance <- handle.Instance, id
+    r
 
-    /// Embed the lifetime of an inner instance to that of an outer one.
-    /// The outer and inner handles are detached and the return value contains a
-    /// handle to the inner instance that destructs the inner instance before the outer.
-    let dock (outer: 'o handle) (inner: 'i handle) = 
-        let outer = detach outer
-        let inner = detach inner
-        { _instance = inner.instance, fun() -> inner.dispose(); outer.dispose() }
+/// Embed the lifetime of an inner instance to that of an outer one.
+/// The outer and inner handles are detached and the return value contains a
+/// handle to the inner instance that destructs the inner instance before the outer.
+let dock (outer: 'o handle) (inner: 'i handle) = 
+    let outer = detach outer
+    let inner = detach inner
+    { _Instance = inner.Instance, fun() -> inner.Dispose(); outer.Dispose() }
         
-    /// Convert a instance / destructor pair a lifetime handle.
-    let lift v =  { _instance = v }
+/// Convert a instance and a destructor pair to a lifetime handle.
+let lift (instance, destructor) =  { _Instance = instance, destructor }
 
-    /// Convert a IDisposable instance to a lifetime handle.
-    let liftDisposable (instance: 't when 't :> IDisposable) =
-        { _instance = instance, fun() -> instance.Dispose()}
+/// Convert a IDisposable instance to a lifetime handle.
+let liftDisposable (instance: 't when 't :> IDisposable) =
+    { _Instance = instance, fun() -> instance.Dispose()}
 
-    /// Detaches the handle and returns a new handle with the changed instance and the of 
-    /// handle passed in.
-    let map (f: 't -> 'i) (handle: 't handle) : 'i handle =
-        let handle = detach handle
-        (f handle.instance, handle.destructor)
-        |> lift
+/// Detaches the handle and returns a new handle with the changed instance and the of 
+/// handle passed in.
+let map (f: 't -> 'i) (handle: 't handle) : 'i handle =
+    let handle = detach handle
+    (f handle.Instance, handle.Destructor)
+    |> lift
 
-[<AutoOpen("FunToolbox.LifetimeExtensions")>]
-do ()     
-    
