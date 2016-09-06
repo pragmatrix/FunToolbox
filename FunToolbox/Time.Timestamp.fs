@@ -15,7 +15,7 @@ type Timestamp =
     | Timestamp of int64
     static member Now = Stopwatch.GetTimestamp() |> Timestamp
     static member (-) (Timestamp l, Timestamp r) = 
-        ((r - l) |> float) / ticksPerSecond
+        (l - r |> float) / ticksPerSecond
         |> TimeSpan.FromSeconds
     static member (+) (Timestamp l, r: TimeSpan) = 
         l + ((r.TotalSeconds * ticksPerSecond) |> int64)
