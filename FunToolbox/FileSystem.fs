@@ -34,7 +34,7 @@ type Path =
     static member parse str =
         let normalized = str |> normalizedPath
         if not <| Helpers.isValidAbsolutePath normalized then
-            failwithf "%s: invalid absolute path" normalized
+            failwithf "'%s' is an invalid absolute path" normalized
         Path normalized
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
