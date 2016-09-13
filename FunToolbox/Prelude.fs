@@ -68,17 +68,17 @@ let asDisposable f =
         member this.Dispose() = f() }
 
 /// Extend AsyncBuilder with the option bind tasks without using Async.AwaitTask. 
-/// This is experimental, so only Bind is supported for now.
+/// For a sophisticated implementation: https://github.com/kekyo/FSharp.Control.FusionTasks
 type AsyncBuilder with
-    member this.Bind(t: Task<'t>, f: 't -> Async<'r>) : Async<'r> = 
-        this.Bind(t |> Async.AwaitTask, f)
-    member this.Bind(t: Task, f: unit -> Async<'r>) : Async<'r> = 
-        this.Bind(t |> Async.AwaitTask, f)
+    
+    member __.Source(t: Task<'r>) : Async<'r> = 
+        Async.AwaitTask t
 
-    member this.ReturnFrom(t : Task<'r>) : Async<'r> = 
-        t |> Async.AwaitTask
-    member this.ReturnFrom(t : Task) : Async<unit> = 
-        t |> Async.AwaitTask
+    member __.Source(t: Task) : Async<unit> = 
+        Async.AwaitTask t
+
+    member __.Source(a: Async<'r>) : Async<'r> = 
+        a
 
 /// A predicate & combinator.
 let (<&>) f g = (fun x -> f x && g x)
