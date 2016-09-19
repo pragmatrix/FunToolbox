@@ -80,6 +80,9 @@ type AsyncBuilder with
     member __.Source(a: Async<'r>) : Async<'r> = 
         a
 
+    member __.Source(s: 'e seq) : 'e seq =
+        s
+
 /// A predicate & combinator.
 let (<&>) f g = (fun x -> f x && g x)
 
