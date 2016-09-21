@@ -83,6 +83,20 @@ type AsyncBuilder with
     member __.Source(s: 'e seq) : 'e seq =
         s
 
+type Async with
+    static member MapOption (workflow: 'a -> Async<'b>) =
+        fun valueOpt ->
+        match valueOpt with
+        | None -> async { return None }
+        | Some value ->
+            async {
+                let! r = workflow value
+                return Some r
+            }
+
+    static member Return value = 
+        async { return value }
+
 /// A predicate & combinator.
 let (<&>) f g = (fun x -> f x && g x)
 
