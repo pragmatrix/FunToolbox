@@ -18,7 +18,7 @@ module Option =
         | None -> elseValueF()
         
     /// Return the value of the option, or elseValue when it is None.
-    let inline orElseConst elseValue option = 
+    let inline orElseVal elseValue option = 
         match option with
         | Some v -> v
         | None -> elseValue
