@@ -27,6 +27,11 @@ module Option =
     let inline ofBool b = 
         if b then Some () else None
 
+    let inline toBool o =
+        match o with
+        | Some _ -> true
+        | None -> false
+
     /// Returns Some v if the value can be cast to the given type.
     let inline cast<'rt> (v: obj) : ('rt option) = 
         match v with
