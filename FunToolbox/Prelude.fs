@@ -34,7 +34,9 @@ module Option =
         | _ -> None
 
 /// Equivalent to the <| operator, but with a more useful priority to separate funs, etc.
+[<Obsolete("Use ^ instead")>]
 let inline (--) a b = a b
+let inline (^) x = x
 
 // ordinal startsWith / endsWith for strings
 type System.String with

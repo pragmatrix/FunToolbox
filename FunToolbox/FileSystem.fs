@@ -47,7 +47,7 @@ module Path =
     /// absolute path.
     let extend (subPath: string) (path: Path) = 
         path 
-        |> map -- fun p -> Path.Combine(p, subPath)
+        |> map ^ fun p -> Path.Combine(p, subPath)
 
     /// The parent / directory part of the path
     let parent (path: Path) = 
@@ -64,7 +64,7 @@ module Path =
         
     let withExtension (ext: string) (path: Path) = 
         path
-        |> map -- fun p -> Path.ChangeExtension(p, ext)
+        |> map ^ fun p -> Path.ChangeExtension(p, ext)
         
     let ensureDirectoryExists (path: Path) = 
         Directory.CreateDirectory path.value |> ignore
