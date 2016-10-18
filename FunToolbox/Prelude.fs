@@ -63,7 +63,9 @@ module Seq =
 module Array = 
     let inline flatten a = Array.collect id a
 
-let inline flip f a b = f b a          
+let inline flip f a b = f b a
+let inline curry f a b = f (a,b)
+let inline uncurry f (a,b) = f a b
     
 type Agent<'t> = MailboxProcessor<'t>
 type 't agent = Agent<'t>
