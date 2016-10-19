@@ -51,17 +51,10 @@ type System.String with
         this.EndsWith(part, StringComparison.Ordinal)
     
 module List =
-    let inline flatten l = List.collect id l
     let rec revAndPrepend a l = 
         match a with
         | next :: rest -> revAndPrepend rest (next::l) 
         | [] -> l
-
-module Seq = 
-    let inline flatten s = Seq.collect id s
-
-module Array = 
-    let inline flatten a = Array.collect id a
 
 let inline flip f a b = f b a
 let inline curry f a b = f (a,b)
