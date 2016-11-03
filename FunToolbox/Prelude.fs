@@ -134,5 +134,5 @@ let maybe = MaybeBuilder()
 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
-()    
+()
 
