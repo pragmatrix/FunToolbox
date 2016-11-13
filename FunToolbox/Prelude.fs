@@ -89,18 +89,19 @@ type AsyncBuilder with
 
 module Async =
 
+    let inline result r = async.Return r
+
     let inline bind f computation = async.Bind(computation, f)
 
-    let inline map f = bind (f >> async.Return)
+    let inline map f = bind (f >> result)
 
     let inline mapOption (computation: 'a -> Async<'b>) =
-        fun valueOpt ->
-        match valueOpt with
-        | None -> async { return None }
-        | Some value -> async {
-            let! r = computation value
-            return Some r
-        }
+        function
+        | None -> 
+            async.Return None
+        | Some value -> 
+            computation value 
+            |> map Some
 
 type Async with
     static member Return = async.Return
