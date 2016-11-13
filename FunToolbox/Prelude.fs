@@ -41,7 +41,7 @@ module Option =
 /// Equivalent to the <| operator, but with a more useful priority to separate funs, etc.
 [<Obsolete("Use ^ instead")>]
 let inline (--) a b = a b
-let inline (^) x = x
+let (^) = (<|)
 
 // ordinal startsWith / endsWith for strings
 type System.String with
@@ -76,33 +76,53 @@ let asDisposable f =
 
 /// Extend AsyncBuilder with the option bind tasks without using Async.AwaitTask. 
 /// For a sophisticated implementation: https://github.com/kekyo/FSharp.Control.FusionTasks
+/// Note that the first overload is used for type inference.
 type AsyncBuilder with
     
-    member __.Source(t: Task<'r>) : Async<'r> = 
-        Async.AwaitTask t
-
-    member __.Source(t: Task) : Async<unit> = 
-        Async.AwaitTask t
-
     member __.Source(a: Async<'r>) : Async<'r> = 
         a
 
     member __.Source(s: 'e seq) : 'e seq =
         s
 
-type Async with
-    static member MapOption (workflow: 'a -> Async<'b>) =
+    member __.Source(t: Task<'r>) : Async<'r> = 
+        Async.AwaitTask t
+
+    member __.Source(t: Task) : Async<unit> = 
+        Async.AwaitTask t
+
+
+module Async =
+
+    let inline bind f computation = async.Bind(computation, f)
+
+    let inline map f computation = async {
+        let! r = computation
+        return! f r
+    }
+
+    let inline mapOption (computation: 'a -> Async<'b>) =
         fun valueOpt ->
         match valueOpt with
         | None -> async { return None }
-        | Some value ->
-            async {
-                let! r = workflow value
-                return Some r
-            }
+        | Some value -> async {
+            let! r = computation value
+            return Some r
+        }
 
-    static member Return value = 
-        async { return value }
+type Async with
+    static member Return = async.Return
+
+type MailboxProcessor<'t> with
+    static member StartFold (f: 'state -> 'request -> 'state Async) initial = 
+        MailboxProcessor.Start <| 
+        fun mb -> 
+        let rec loop state = async {
+            let! request = mb.Receive()
+            let! state = f state request
+            return! loop state
+        }
+        loop initial
 
 /// A predicate & combinator.
 let (<&>) f g = (fun x -> f x && g x)
