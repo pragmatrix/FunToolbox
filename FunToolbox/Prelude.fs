@@ -91,10 +91,7 @@ module Async =
 
     let inline bind f computation = async.Bind(computation, f)
 
-    let inline map f computation = async {
-        let! r = computation
-        return! f r
-    }
+    let inline map f = bind (f >> async.Return)
 
     let inline mapOption (computation: 'a -> Async<'b>) =
         fun valueOpt ->
