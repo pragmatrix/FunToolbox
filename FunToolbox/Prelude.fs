@@ -1,6 +1,7 @@
 ﻿module FunToolbox.Prelude
 
 open System
+open System.Threading
 open System.Threading.Tasks
 
 type CRAttribute = CompilationRepresentationAttribute
@@ -86,6 +87,34 @@ type AsyncBuilder with
         s
 
 type Async with
+    // http://www.fssnip.net/hx
+    static member AwaitTask (t : Task<'T>, timeout : TimeSpan) =
+        async {
+            use cts = new CancellationTokenSource()
+            use timer = Task.Delay (timeout, cts.Token)
+            let! completed = Async.AwaitTask <| Task.WhenAny(t, timer)
+            if completed = (t :> Task) then
+                cts.Cancel ()
+                let! result = Async.AwaitTask t
+                return Some result
+            else 
+                return None
+        }
+
+    // http://www.fssnip.net/hx
+    static member AwaitTask (t : Task, timeout : TimeSpan) =
+        async {
+            use cts = new CancellationTokenSource()
+            use timer = Task.Delay (timeout, cts.Token)
+            let! completed = Async.AwaitTask <| Task.WhenAny(t, timer)
+            if completed = t then
+                cts.Cancel ()
+                do! Async.AwaitTask t
+                return true
+            else 
+                return false
+        }
+
     static member MapOption (workflow: 'a -> Async<'b>) =
         fun valueOpt ->
         match valueOpt with
