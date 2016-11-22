@@ -11,18 +11,30 @@ let [<Literal>] ModuleSuffix = CompilationRepresentationFlags.ModuleSuffix
 
 [<CR(ModuleSuffix)>]
 module Option =
-
-    /// Return the value of the option, call elseValue when it is None.
-    let inline orElse elseValueF option = 
-        match option with
-        | Some v -> v
-        | None -> elseValueF()
-        
     /// Return the value of the option, or elseValue when it is None.
+    [<Obsolete("use Option.defaultValue")>]
     let inline orElseVal elseValue option = 
         match option with
         | Some v -> v
         | None -> elseValue
+
+    /// Return the value of the option, call elseValue when it is None.
+    [<Obsolete("use Option.defaultWith")>]
+    let inline orElse elseValueF option = 
+        match option with
+        | Some v -> v
+        | None -> elseValueF()
+
+    // https://github.com/fsharp/fslang-design/issues/60#issuecomment-262224937
+    let inline defaultValue value = 
+        function
+        | Some v -> v
+        | None -> value
+
+    let inline defaultWith f = 
+        function
+        | Some v -> v
+        | None -> f()
 
     /// Returns Some () for true, and None for false
     let inline ofBool b = 
