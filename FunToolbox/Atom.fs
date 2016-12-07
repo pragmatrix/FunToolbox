@@ -20,6 +20,16 @@ module Atom =
 
     /// Apply a function to the atom.
     let apply (f: 'v -> 'v) (a: 'v atom) = a f |> ignore
+
+    /// Takes something out of the atom.
+    let take (f: 'v -> 'v * 'r) (a: 'v atom) = 
+        let mutable r = Unchecked.defaultof<'r>
+        let f s =
+            let s, r' = f s
+            r <- r'
+            s
+        apply f a
+        r
     
     /// Return the current value of a Atom (also implemented via apply)
     let snapshot a = 
