@@ -53,6 +53,7 @@
     <Compile Include="Synchronized.Queue.fs" />
     <Compile Include="Algorithms.fs" />
     <Compile Include="Time.Timestamp.fs" />
+    <Compile Include="AsyncSequencer.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
