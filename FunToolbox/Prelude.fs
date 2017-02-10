@@ -78,9 +78,12 @@ type 't agent = Agent<'t>
 
 /// Convert a function to an IDisposable.Dispose(), useful for building return values
 /// that can be used for `use` constructs.
-let asDisposable f = 
+let inline asDisposable f = 
     { new IDisposable with
-        member this.Dispose() = f() }
+        member __.Dispose() = f() }
+
+let inline dispose (disposable: #IDisposable) = 
+    disposable.Dispose()
 
 /// Extend AsyncBuilder with the option bind tasks without using Async.AwaitTask. 
 /// For a sophisticated implementation: https://github.com/kekyo/FSharp.Control.FusionTasks
