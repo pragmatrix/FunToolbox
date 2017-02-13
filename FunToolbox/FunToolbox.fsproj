@@ -54,6 +54,7 @@
     <Compile Include="Algorithms.fs" />
     <Compile Include="Time.Timestamp.fs" />
     <Compile Include="AsyncSequencer.fs" />
+    <Compile Include="StateAgent.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
