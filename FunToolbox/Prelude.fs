@@ -78,6 +78,18 @@ type System.Collections.Generic.List<'a> with
 let inline flip f a b = f b a
 let inline curry f a b = f (a,b)
 let inline uncurry f (a,b) = f a b
+
+let inline expect expected seen = 
+    if expected <> seen then
+        failwithf "internal error, unexpected state, expected %A, but seen %A" expected seen
+
+type 'Result result =
+    | Result of 'Result
+    | Error of exn
+
+module Result = 
+    let inline map f = function Result r -> Result (f r) | Error e -> Error e
+    let inline bind c = function Result r -> c r | Error e -> Error e
     
 type Agent<'t> = MailboxProcessor<'t>
 type 't agent = Agent<'t>
