@@ -69,6 +69,23 @@ module List =
         | next :: rest -> revAndPrepend rest (next::l) 
         | [] -> l
 
+module Seq = 
+
+    /// Materialize sequence _and_ detach it from its source by converting it to an array.
+    let inline materialize (s: 'e seq) : 'e seq =
+        s |> Seq.toArray |> seq
+
+    /// Evaluates the complete sequence right now and returns a sequence that points to an internal 
+    /// array of the evaluation result. If the sequence _is_ a materialized collection already, like
+    /// a _ list, a List<_>, or Array<_> it leaves it as it is.
+    let inline ensureMaterialized (s: 'e seq) : 'e seq = 
+        match s with
+        | :? Array -> s
+        | :? ('e list) -> s
+        | :? System.Collections.Generic.List<'e> -> s
+        | s ->
+            s |> materialize
+
 type System.Collections.Generic.List<'a> with
     member this.TakeAll() = 
         let r = this.ToArray()
