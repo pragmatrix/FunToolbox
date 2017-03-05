@@ -96,6 +96,9 @@ let inline flip f a b = f b a
 let inline curry f a b = f (a,b)
 let inline uncurry f (a,b) = f a b
 
+/// A predicate & combinator.
+let (<&>) f g = (fun x -> f x && g x)
+
 let inline expect expected seen = 
     if expected <> seen then
         failwithf "internal error, unexpected state, expected %A, but seen %A" expected seen
@@ -243,9 +246,6 @@ type MailboxProcessor<'t> with
             return! loop state
         }
         loop initial
-
-/// A predicate & combinator.
-let (<&>) f g = (fun x -> f x && g x)
 
 // https://github.com/fsprojects/FSharpx.Extras/blob/master/src/FSharpx.Extras/ComputationExpressions/Monad.fs
 /// The maybe monad.
