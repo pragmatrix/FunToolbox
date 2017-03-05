@@ -153,6 +153,11 @@ type AsyncBuilder with
     member __.Source(t: Task) : Async<unit> = 
         Async.AwaitTask t
 
+//
+// Async
+//
+
+type 'Result async = Async<'Result>
 
 module Async =
 
