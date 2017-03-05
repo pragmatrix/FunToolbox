@@ -69,6 +69,12 @@ module List =
         | next :: rest -> revAndPrepend rest (next::l) 
         | [] -> l
 
+type System.Collections.Generic.List<'a> with
+    member this.TakeAll() = 
+        let r = this.ToArray()
+        this.Clear()
+        r
+
 let inline flip f a b = f b a
 let inline curry f a b = f (a,b)
 let inline uncurry f (a,b) = f a b
