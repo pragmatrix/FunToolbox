@@ -110,6 +110,15 @@ type 'Result result =
 module Result = 
     let inline map f = function Result r -> Result (f r) | Error e -> Error e
     let inline bind c = function Result r -> c r | Error e -> Error e
+
+    /// Wrap a function into a result by capturing the exception the function may throw.
+    /// tbd: I am not sure about the name here, and how its related to the monadic nature of the Result type.
+    let inline capture (f: 'a -> 'b) = 
+        fun p ->
+            try 
+                f p |> Result
+            with e ->
+                Error e
     
 //
 // IDisposable
