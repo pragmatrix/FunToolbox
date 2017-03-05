@@ -91,8 +91,9 @@ module Result =
     let inline map f = function Result r -> Result (f r) | Error e -> Error e
     let inline bind c = function Result r -> c r | Error e -> Error e
     
-type Agent<'t> = MailboxProcessor<'t>
-type 't agent = Agent<'t>
+//
+// IDisposable
+//
 
 /// Convert a function to an IDisposable.Dispose(), useful for building return values
 /// that can be used for `use` constructs.
@@ -102,6 +103,38 @@ let inline asDisposable f =
 
 let inline dispose (disposable: #IDisposable) = 
     disposable.Dispose()
+
+module DisposeChain =
+    type T() = 
+        let mutable chain = []
+        member this.Use (disp: #IDisposable) =
+            chain <- (disp :> IDisposable) :: chain
+            disp
+
+        member this.Push (disp: #IDisposable) =
+            chain <- (disp :> IDisposable) :: chain
+
+        member this.Dispose() = 
+            (this :> IDisposable).Dispose()
+
+        interface IDisposable with
+            member this.Dispose() =
+                match chain with
+                | [] -> ()
+                | next::rest ->
+                next.Dispose()
+                chain <- rest
+                (this :> IDisposable).Dispose()
+
+let disposeChain() = 
+    new DisposeChain.T()
+
+//
+// MailboxProcessor
+//
+
+type Agent<'t> = MailboxProcessor<'t>
+type 't agent = Agent<'t>
 
 /// Extend AsyncBuilder with the option bind tasks without using Async.AwaitTask. 
 /// For a sophisticated implementation: https://github.com/kekyo/FSharp.Control.FusionTasks
