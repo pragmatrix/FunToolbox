@@ -29,19 +29,22 @@ module private Helpers =
 /// Separators (all backslashes converted to forward slashes)
 type Path = 
     | Path of string
-    override this.ToString() = this.value
-    member this.value = let (Path path) = this in path
-    static member parse str =
+    [<Obsolete("use (string path)")>]
+    member this.value = string this
+    override this.ToString() = 
+        this |> function Path path -> path
+
+[<CR(ModuleSuffix)>]
+module Path = 
+
+    let parse str =
         let normalized = str |> normalizedPath
         if not <| Helpers.isValidAbsolutePath normalized then
             failwithf "'%s' is an invalid absolute path" normalized
         Path normalized
 
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module Path = 
-
-    let map (f: string -> string) (path: Path) = 
-        path.value |> f |> Path.parse
+    let map (f: string -> string) (Path path) = 
+        path |> f |> parse
 
     /// Extend the path with a sub-path. The sub-path can be a relative or
     /// absolute path.
@@ -54,9 +57,8 @@ module Path =
         path |> map Path.GetDirectoryName
 
     /// Returns the name part of the path.
-    let name (path: Path) = 
-        path.value
-        |> Path.GetFileName
+    let name (Path path) = 
+        Path.GetFileName path
            
     /// Split the path in a directory part and a name part.
     let split (path: Path) = 
@@ -66,15 +68,15 @@ module Path =
         path
         |> map ^ fun p -> Path.ChangeExtension(p, ext)
         
-    let ensureDirectoryExists (path: Path) = 
-        Directory.CreateDirectory path.value |> ignore
+    let ensureDirectoryExists (Path path) = 
+        Directory.CreateDirectory path |> ignore
 
     let ensureDirectoryOfPathExists (path: Path) =
         path |> parent |> ensureDirectoryExists
         
     let currentDirectory() : Path = 
         Directory.GetCurrentDirectory()
-        |> Path.parse
+        |> parse
         
-    let fileExists (path: Path) = 
-        File.Exists (path.value)
+    let fileExists (Path path) = 
+        File.Exists path
