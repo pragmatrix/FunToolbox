@@ -49,8 +49,7 @@ type Path =
     override this.ToString() = 
         this |> function Path path -> path
 
-/// Representation of a path extension. Does not include the leading period (.). 
-/// Never empty.
+/// Representation of a path extension. Always includes the leading period (.). 
 type Ext = 
     | Ext of string
     override this.ToString() = 
@@ -86,9 +85,8 @@ module Path =
     let split (path: Path) = 
         path |> parent, path |> name
 
-    /// Changes the extension of the path. The extension is not specified with a dot.
+    /// Changes the extension of the path. The extension may include the leading perion (.).
     /// If the extension is empty, the current extension is removed from the path.        
-    [<Obsolete("use withExt")>]
     let withExtension (ext: string) (path: Path) = 
         path
         |> map ^ fun p -> Path.ChangeExtension(p, ext)
@@ -117,16 +115,16 @@ module Path =
 [<CR(ModuleSuffix)>]
 module Ext = 
 
-    /// Parses an extension string, must be trimmed and without a leading period, also
-    /// is not allowed to contain any invalid file characters.
+    /// Parses an extension string, must be trimmed and may include a leading period.
     let parse (ext: string) = 
-        if ext.startsWith "." then
-            failwithf "extension '%s' is not allowed to start with a period (.)" ext
         
         if not <| Helpers.isValidName ext then
             failwithf "'%s' is an invalid extension" ext
 
-        Ext ext
+        if (not <| ext.startsWith ".") then
+            Ext ("." + ext)
+        else
+            Ext ext
 
 module File = 
 
