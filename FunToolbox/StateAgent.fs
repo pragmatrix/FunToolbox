@@ -42,7 +42,11 @@ type Agent<'state> with
             function
             | Error e -> e.Throw()
             | Ok -> ()
-
+        
+    /// Run a state update function inside the agent. 
+    /// Note: event though Update returns an async, the ordering of the updates is synchronized 
+    /// with the ordering of the update calls (the message that is sent to the mailboxprocess is placed
+    /// in its queue before this function returns).
     member this.Update f =
         fun state -> async {
             return f state
