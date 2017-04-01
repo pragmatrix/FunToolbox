@@ -51,6 +51,11 @@ module Option =
         | :? 'rt as v -> Some v
         | _ -> None
 
+    /// returns None when an exception happens while computing the result.
+    let inline tryWith (f: unit -> 'r) : ('r option) = 
+        try Some <| f()
+        with _ -> None
+
 /// Equivalent to the <| operator, but with a more useful priority to separate funs, etc.
 [<Obsolete("Use ^ instead")>]
 let inline (--) a b = a b
