@@ -1,3 +1,4 @@
 source https://www.nuget.org/api/v2/
 framework >= net452
+nuget FSharp.Core redirects:on
 nuget FsUnit.xUnit
