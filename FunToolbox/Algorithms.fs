@@ -54,3 +54,22 @@ module Graph =
         |> List.map (fun (k, v) -> k, v |> List.collect snd)
         |> Graph
 
+/// Simple probability selection in the form [(probability: int, value)]
+[<CR(ModuleSuffix)>]
+module Probability = 
+    /// Sum all probabilities in the probability array.
+    let sum table = 
+        table |> Seq.map fst |> Seq.sum
+
+    /// Returns an index in to the probability table based on a probability value.
+    let select probability table =
+        let table = table |> Seq.toArray
+        assert(probability >= 0 && probability < sum table)
+        let highs = table |> Seq.map fst |> Seq.scan (+) 0 |> Seq.skip 1
+        let index = highs |> Seq.findIndex ^ fun high -> high > probability
+        assert(index < table.Length)
+        index
+
+
+        
+        
