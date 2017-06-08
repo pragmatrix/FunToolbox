@@ -1,5 +1,4 @@
-﻿/// An agent that maintains a state and runs modifies the state with async messages.
-
+﻿/// An agent that maintains a state and modifies the state with async messages.
 [<Prelude.RQA>]
 module FunToolbox.StateAgent
 
@@ -44,7 +43,7 @@ type Agent<'state> with
             | Ok -> ()
         
     /// Run a state update function inside the agent. 
-    /// Note: event though Update returns an async, the ordering of the updates is synchronized 
+    /// Note: even though Update returns an async, the ordering of the updates is synchronized 
     /// with the ordering of the update calls (the message that is sent to the mailboxprocess is placed
     /// in its queue before this function returns).
     member this.Update f =
