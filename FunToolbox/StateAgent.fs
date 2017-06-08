@@ -35,20 +35,12 @@ let create (initial: 'state) : Agent<'state> =
 
 type Agent<'state> with
     /// Execute the state update function f inside the agent's context.
+    /// Note: even though Update returns an async, the ordering of the updates is synchronized 
+    /// with the ordering of the update calls (the message that is sent to the mailboxprocess is placed
+    /// in its queue before this function returns).
     member this.Update f =
         this.MB.PostAndAsyncReply ^ fun rc -> RunAsync(f, rc)
         |> Async.map ^
             function
             | Error e -> e.Throw()
             | Ok -> ()
-        
-    /// Run a state update function inside the agent. 
-    /// Note: even though Update returns an async, the ordering of the updates is synchronized 
-    /// with the ordering of the update calls (the message that is sent to the mailboxprocess is placed
-    /// in its queue before this function returns).
-    member this.Update f =
-        fun state -> async {
-            return f state
-        }
-        |> this.Update
-
