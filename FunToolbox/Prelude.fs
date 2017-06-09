@@ -195,11 +195,13 @@ type 'Result async = Async<'Result>
 
 module Async =
 
+    [<Obsolete("use Async.unit instead")>]
     let inline result r = async.Return r
+    let inline unit r = async.Return r
 
     let inline bind f computation = async.Bind(computation, f)
 
-    let inline map f = bind (f >> result)
+    let inline map f = bind (f >> unit)
 
     let inline mapOption (computation: 'a -> Async<'b>) =
         function
