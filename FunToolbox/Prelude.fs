@@ -4,7 +4,6 @@ open System
 open System.Threading
 open System.Threading.Tasks
 
-type CRAttribute = CompilationRepresentationAttribute
 type RQAAttribute = RequireQualifiedAccessAttribute
 
 let [<Literal>] ModuleSuffix = CompilationRepresentationFlags.ModuleSuffix
