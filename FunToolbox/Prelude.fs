@@ -9,7 +9,6 @@ type RQAAttribute = RequireQualifiedAccessAttribute
 
 let [<Literal>] ModuleSuffix = CompilationRepresentationFlags.ModuleSuffix
 
-[<CR(ModuleSuffix)>]
 module Option =
     /// Return the value of the option, or elseValue when it is None.
     [<Obsolete("use Option.defaultValue")>]
