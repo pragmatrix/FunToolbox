@@ -8,7 +8,6 @@ open System.Collections.Generic
 type Graph<'t> = private Graph of ('t * 't list) list
 type 't graph = Graph<'t>
 
-[<CR(ModuleSuffix)>]
 module Graph = 
 
     exception CycleFoundException
@@ -55,7 +54,6 @@ module Graph =
         |> Graph
 
 /// Simple probability selection in the form [(probability: int, value)]
-[<CR(ModuleSuffix)>]
 module Probability = 
     /// Sum all probabilities in the probability array.
     let sum table = 

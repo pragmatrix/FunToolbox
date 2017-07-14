@@ -55,7 +55,6 @@ type Ext =
     override this.ToString() = 
         this |> function Ext extension -> extension
 
-[<CR(ModuleSuffix)>]
 module Path = 
 
     let parse str =
@@ -112,7 +111,6 @@ module Path =
     let fileExists (Path path) = 
         File.Exists path
     
-[<CR(ModuleSuffix)>]
 module Ext = 
 
     /// Parses an extension string, must be trimmed and may include a leading period.

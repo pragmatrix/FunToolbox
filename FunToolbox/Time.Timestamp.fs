@@ -32,6 +32,6 @@ type Timestamp =
     static member op_GreaterThanOrEqual (Timestamp l, Timestamp r) = 
         l >= r
 
-[<RQA; CR(ModuleSuffix)>]
+[<RQA>]
 module Timestamp = 
     let now = Timestamp.Now
