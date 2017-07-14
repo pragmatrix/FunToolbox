@@ -108,22 +108,15 @@ let inline expect expected seen =
     if expected <> seen then
         failwithf "internal error, unexpected state, expected %A, but seen %A" expected seen
 
-type 'Result result =
-    | Result of 'Result
-    | Error of exn
-
 module Result = 
-    let inline map f = function Result r -> Result (f r) | Error e -> Error e
-    let inline bind c = function Result r -> c r | Error e -> Error e
+    let inline bind c = function Ok r -> c r | Error e -> Error e
 
     /// Wrap a function into a result by capturing the exception the function may throw.
     /// tbd: I am not sure about the name here, and how its related to the monadic nature of the Result type.
     let inline capture (f: 'a -> 'b) = 
         fun p ->
-            try 
-                f p |> Result
-            with e ->
-                Error e
+            try Ok ^ f p
+            with e -> Error e
     
 //
 // IDisposable
