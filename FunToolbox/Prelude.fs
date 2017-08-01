@@ -3,6 +3,7 @@
 open System
 open System.Threading
 open System.Threading.Tasks
+open System.Diagnostics
 
 type CRAttribute = CompilationRepresentationAttribute
 
@@ -57,7 +58,9 @@ module Option =
 
 /// Equivalent to the <| operator, but with a more useful priority to separate funs, etc.
 [<Obsolete("Use ^ instead")>]
+[<DebuggerStepThrough>]
 let inline (--) a b = a b
+[<DebuggerStepThrough>]
 let (^) = (<|)
 
 // ordinal startsWith / endsWith for strings
@@ -167,9 +170,11 @@ type 't agent = Agent<'t>
 /// Note that the first overload is used for type inference.
 type AsyncBuilder with
     
+    [<DebuggerStepThrough>]
     member __.Source(a: Async<'r>) : Async<'r> = 
         a
 
+    [<DebuggerStepThrough>]
     member __.Source(s: 'e seq) : 'e seq =
         s
 
