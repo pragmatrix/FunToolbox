@@ -1,4 +1,5 @@
-﻿/// An agent that maintains a state and modifies the state with async messages.
+﻿/// An agent that maintains a state and modifies the state with functions that
+/// are delivered via async messages.
 [<Prelude.RQA>]
 module FunToolbox.StateAgent
 
@@ -11,22 +12,28 @@ type Reply =
 
 type Message<'state> =
     | RunAsync of ('state -> Async<'state>) * AsyncReplyChannel<Reply>
+    | GetState of AsyncReplyChannel<'state>
 
-type Agent<'state>(mb: MailboxProcessor<Message<'state>>) =
-    member internal this.MB = mb
+type Agent<'state>(agent: Message<'state> agent) =
+    member internal this.Agent = agent
 
 let create (initial: 'state) : Agent<'state> =
 
-    let agent = Agent.Start ^ fun _ -> async.Return()
+    let agent = Agent.create()
 
     let rec loop state = async {
-        let! (RunAsync(job, reply)) = agent.Receive()
-        try
-            let! newState = job state
-            reply.Reply ^ Ok
-            return! loop newState
-        with e ->
-            reply.Reply ^ Error ^ ExceptionDispatchInfo.Capture e
+        let! msg = agent.Receive()
+        match msg with
+        | RunAsync(job, reply) ->
+            try
+                let! newState = job state
+                reply.Reply ^ Ok
+                return! loop newState
+            with e ->
+                reply.Reply ^ Error ^ ExceptionDispatchInfo.Capture e
+                return! loop state
+        | GetState reply ->
+            reply.Reply state
             return! loop state
     }
 
@@ -39,8 +46,14 @@ type Agent<'state> with
     /// with the ordering of the update calls (the message that is sent to the mailboxprocess is placed
     /// in its queue before this function returns).
     member this.Update f =
-        this.MB.PostAndAsyncReply ^ fun rc -> RunAsync(f, rc)
+        this.Agent.PostAndAsyncReply 
+            ^ fun replyChannel -> RunAsync(f, replyChannel)
         |> Async.map ^
             function
             | Error e -> e.Throw()
             | Ok -> ()
+    
+    /// Get the current state.
+    member this.State =
+        this.Agent.PostAndAsyncReply 
+            ^ fun replyChannel -> GetState(replyChannel)

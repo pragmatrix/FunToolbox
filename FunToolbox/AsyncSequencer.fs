@@ -16,15 +16,15 @@ type Message =
 type AsyncSequencer = MailboxProcessor<Message>
 
 let create() : AsyncSequencer =
-    let agent = Agent.Start ^ fun _ -> async.Return()
+    let agent = Agent.create()
 
     let rec loop() = async {
         let! (RunAsync(job, reply)) = agent.Receive()
-        try
+        try 
             let! r = job()
             reply.Reply ^ Ok r
-        with e ->
-            reply.Reply ^ Error ^ ExceptionDispatchInfo.Capture e
+        with e 
+            -> reply.Reply ^ Error ^ ExceptionDispatchInfo.Capture e
         return! loop()
     }
 
@@ -33,16 +33,13 @@ let create() : AsyncSequencer =
 
 let sequencify (sequencerAgent: _ agent) (job: 'msg -> Async<'r>) msg : Async<'r> = 
         
-    // this first part runs synchronously in the context of the service dispatcher. 
-    // So to properly run async functions in sequence we need to immediately put the message 
-    // into the agent's queue here and run the job _after_ the message was delivered.
-
+    // To run async functions in sequence we need to keep the messages
+    // sent to the agent in order. This is done by putting the message into 
+    // the agent's queue outside before the async computation is scheduled.
+    
     sequencerAgent.PostAndAsyncReply ^ 
         fun rc -> RunAsync((fun () -> job msg |> Async.map box), rc)
     |> Async.map ^ 
-    function
-    | Ok o -> 
-        unbox o
-    | Error e -> 
-        e.Throw()
-        Unchecked.defaultof<_>
+        function
+        | Ok o -> unbox o
+        | Error e -> e.Throw(); Unchecked.defaultof<_>

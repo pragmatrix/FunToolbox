@@ -165,6 +165,10 @@ let disposeChain() =
 type Agent<'t> = MailboxProcessor<'t>
 type 't agent = Agent<'t>
 
+module Agent =
+    let create() : 't agent =
+        Agent.Start ^ fun _ -> async.Return()
+
 /// Extend AsyncBuilder with the option bind tasks without using Async.AwaitTask. 
 /// For a sophisticated implementation: https://github.com/kekyo/FSharp.Control.FusionTasks
 /// Note that the first overload is used for type inference.
