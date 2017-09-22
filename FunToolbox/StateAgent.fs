@@ -25,13 +25,15 @@ let create (initial: 'state) : Agent<'state> =
         let! msg = agent.Receive()
         match msg with
         | RunAsync(job, reply) ->
-            try
-                let! newState = job state
-                reply.Reply ^ Ok
-                return! loop newState
-            with e ->
-                reply.Reply ^ Error ^ ExceptionDispatchInfo.Capture e
-                return! loop state
+            let! result, newState = async {
+                try
+                    let! newState = job state
+                    return Ok, newState
+                with e ->
+                    return Error ^ ExceptionDispatchInfo.Capture e, state
+            }
+            reply.Reply result
+            return! loop newState
         | GetState reply ->
             reply.Reply state
             return! loop state
