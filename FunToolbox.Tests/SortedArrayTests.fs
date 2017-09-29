@@ -157,3 +157,72 @@ let sortedArrayContains(value, containsIt: bool) =
     array
     |> SortedArray.contains value
     |> should equal containsIt
+
+
+[<Fact>]
+let ``lower bound matching``() = 
+    
+    [
+        [1;2;3]
+        [1;2;2;3]
+        [1;2;2;2;3]
+        [1;2;2;2;2;3]
+    ]
+    |> List.iter ^ fun l ->
+        l
+        |> SortedArray.ofSeq
+        |> SortedArray.lowerBound 2 
+        |> should equal 1
+
+    [
+        []
+        [1]
+        [1;1]
+        [1;1;1]
+        [1;1;1;1]
+        [1;1;1;1;1]
+        [1;1;1;1;1;1]
+    ]
+    |> List.iter ^ fun l ->
+        l
+        |> SortedArray.ofSeq
+        |> SortedArray.lowerBound 1
+        |> should equal 0
+
+[<Fact>]
+let ``upper bound matching``() = 
+
+    [
+        [1;1;1;1;1;1]
+        [0;1;1;1;1;1]
+        [0;0;1;1;1;1]
+        [0;0;0;1;1;1]
+        [0;0;0;0;1;1]
+        [0;0;0;0;0;1]
+        [0;0;0;0;0;0]
+    ]
+    |> List.iter ^ fun l ->
+        l
+        |> SortedArray.ofSeq
+        |> SortedArray.upperBound 1
+        |> should equal 6
+
+    [1;2;2;2;2;3]
+    |> SortedArray.ofSeq
+    |> SortedArray.upperBound 2
+    |> should equal 5
+
+
+[<Fact>]
+let ``upper bound not matching``() = 
+
+    [1;1;1;1;1;3;3;3;3;3]
+    |> SortedArray.ofSeq
+    |> SortedArray.upperBound 2
+    |> should equal 5
+
+
+
+
+
+

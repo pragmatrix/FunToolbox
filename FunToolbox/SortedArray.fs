@@ -28,17 +28,31 @@ module SortedArray =
     let toSeq (sa: 'v sarray) = 
         sa |> toArray |> Array.toSeq
 
-    /// Returns the lower bound (the index of the value, or the next larger one, or the length of the
+    /// Returns the lower bound (the index of the first value that matches low in the array, or the length of the
     /// array if none found)
     let lowerBound low (sa: 'v sarray) = 
-        let first = Array.BinarySearch(sa |> toArray, low)
-        if first >= 0 then first else ~~~first
+        let array = sa |> toArray
+        let first = Array.BinarySearch(array, low)
+        match first with
+        | 0 -> first
+        | first when first > 0 ->
+            // exact match, find backwards the first one that does not match.
+            match Array.FindLastIndex(array, first-1, Predicate<_> ((<>) low) ) with
+            | -1 -> 0
+            | i -> i + 1
+        | _ -> ~~~first
 
-    /// Returns the upper bound (the index of the value + 1, or the next larger one, or the length of the
+    /// Returns the upper bound (the index of the next larger value, or the length of the
     /// array if none found)
     let upperBound high (sa: 'v sarray) = 
-        let last = Array.BinarySearch(sa |> toArray, high)
-        if last >= 0 then last + 1 else ~~~last
+        let array = sa |> toArray
+        let last = Array.BinarySearch(array, high)
+        match last with
+        | last when last >= 0 ->
+            match Array.FindIndex(array, last+1, Predicate<_> ((<>) high) ) with
+            | -1 -> array.Length
+            | i -> i
+        | _ -> ~~~last
 
     /// Returns the sorted sequence range of values from low to high (including)
     let range (low: 'v, high: 'v) (sa: 'v sarray) : 'v seq =
