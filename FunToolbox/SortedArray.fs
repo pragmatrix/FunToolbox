@@ -28,7 +28,7 @@ module SortedArray =
     let toSeq (sa: 'v sarray) = 
         sa |> toArray |> Array.toSeq
 
-    /// Returns the lower bound (the index of the first value that matches low in the array, or the length of the
+    /// Returns the lower bound (the index of the first value that matches the value in the array, or the length of the
     /// array if none found)
     let lowerBound low (sa: 'v sarray) = 
         let array = sa |> toArray
