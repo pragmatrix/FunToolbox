@@ -4,7 +4,6 @@ open System
 open System.Threading
 open System.Threading.Tasks
 open System.Diagnostics
-open System.Exception
 open System.Reflection
 
 type CRAttribute = CompilationRepresentationAttribute
