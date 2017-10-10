@@ -4,6 +4,8 @@ open System
 open System.Threading
 open System.Threading.Tasks
 open System.Diagnostics
+open System.Exception
+open System.Reflection
 
 type CRAttribute = CompilationRepresentationAttribute
 
@@ -293,6 +295,23 @@ type MaybeBuilder() =
             fun enum -> this.While(enum.MoveNext, this.Delay(fun () -> body enum.Current)))
 
 let maybe = MaybeBuilder()
+
+type Exception with
+    /// A message that shows the exception message and the first
+    /// exception message in case of an AggregateException or 
+    /// a TargetInvocationException.
+    member this.FirstMessage = 
+        match this with
+        | :? AggregateException as ae ->
+            match Seq.tryHead ae.InnerExceptions with
+            | Some e -> e.FirstMessage
+            | None -> ae.Message
+        | :? TargetInvocationException as ti ->
+            match Option.ofObj ti.InnerException with
+            | Some e -> e.FirstMessage
+            | None -> ti.Message
+        | e -> 
+            e.Message
 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
