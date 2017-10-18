@@ -6,3 +6,4 @@ obj/
 /.paket/paket.exe
 /packages/
 /paket-files/
+/.paket/Paket.Restore.targets
