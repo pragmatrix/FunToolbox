@@ -28,12 +28,12 @@ module private Helpers =
             |> not
 
     let isValidPath (path: string) = 
-        isEmpty path |> not
+        not ^ isEmpty path
         && isTrimmed path 
         && path |> Seq.forall isValidPathCharacter
 
     let isValidName (name: string) =
-        isEmpty name |> not
+        not ^ isEmpty name
         && isTrimmed name
         && name |> Seq.forall isValidNameCharacter
 
