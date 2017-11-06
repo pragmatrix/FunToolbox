@@ -55,6 +55,22 @@ type Ext =
     override this.ToString() = 
         this |> function Ext extension -> extension
 
+module Ext = 
+
+    let tryParse str = 
+        match () with
+        | _ when not ^ isValidName str
+            -> Error ^ sprintf "'%s': extension contains invalid filename characters" str
+        | _ when not ^ str.startsWith "."
+            -> Ok ^ Ext("." + str)
+        | _ -> Ok ^ Ext str
+
+    /// Parses an extension string, must be trimmed and may include a leading period.
+    let parse = 
+        tryParse >> function
+        | Ok r -> r
+        | Error e -> failwith e
+
 module Path = 
 
     let parse str =
@@ -111,19 +127,6 @@ module Path =
     let fileExists (Path path) = 
         File.Exists path
     
-module Ext = 
-
-    /// Parses an extension string, must be trimmed and may include a leading period.
-    let parse (ext: string) = 
-        
-        if not <| Helpers.isValidName ext then
-            failwithf "'%s' is an invalid extension" ext
-
-        if (not <| ext.startsWith ".") then
-            Ext ("." + ext)
-        else
-            Ext ext
-
 module File = 
 
     let loadBinary (Path path) = 
