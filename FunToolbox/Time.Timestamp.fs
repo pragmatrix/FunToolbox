@@ -10,6 +10,7 @@ module private Const =
 
 /// High Resolution timestamp that is based on internal CPU timers. 
 /// Optimized for precise measurements over short periods of time.
+[<Struct>]
 type Timestamp = 
     private 
     | Timestamp of int64
@@ -34,4 +35,4 @@ type Timestamp =
 
 [<RQA>]
 module Timestamp = 
-    let now = Timestamp.Now
+    let now() = Timestamp.Now
