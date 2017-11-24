@@ -205,13 +205,9 @@ module Async =
 
     let inline map f = bind (f >> unit)
 
-    let inline mapOption (computation: 'a -> Async<'b>) =
-        function
-        | None -> 
-            async.Return None
-        | Some value -> 
-            computation value 
-            |> map Some
+    let inline mapOption (computation: 'a -> Async<'b>) = function
+        | None -> async.Return None
+        | Some value -> computation value |> map Some
 
 type Async with
     // http://www.fssnip.net/hx
