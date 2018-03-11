@@ -7,3 +7,4 @@ obj/
 /packages/
 /paket-files/
 /.paket/Paket.Restore.targets
+/tmp/
