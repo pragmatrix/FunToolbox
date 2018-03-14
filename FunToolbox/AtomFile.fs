@@ -63,7 +63,7 @@ module private Helper =
         if data.IsSome then
             let combined = Array.append Header.data data.Value
             fs |> write combined
-        // fs.Flush(true)
+        fs.Flush(true)
 
 /// Writes contents to an atomic file. Creates it, if it's not existing.
 let write fn data = 
