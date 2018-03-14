@@ -1,4 +1,10 @@
-﻿module FunToolbox.AtomFile
+﻿/// Atomic file operations that guarantees that file accesses are atomic as
+/// observed from different operating processes on the same machine. 
+///
+/// Note that the functions herein try to reduce the corruption probability 
+/// in case of power losses to a minimum by flushing the file streams to disk
+/// after a write, but ultimately can not guarantee it.
+module FunToolbox.AtomFile
 
 open System.IO
 open System.Text
@@ -55,13 +61,9 @@ module private Helper =
     let setData (fs: FileStream) (data: byte[] option) =
         fs |> truncate
         if data.IsSome then
-            try
-                fs |> write Header.data
-                fs |> write data.Value
-            with _ ->
-                // be sure file is empty when writing fails.
-                fs |> truncate
-                reraise()
+            let combined = Array.append Header.data data.Value
+            fs |> write combined
+        // fs.Flush(true)
 
 /// Writes contents to an atomic file. Creates it, if it's not existing.
 let write fn data = 
