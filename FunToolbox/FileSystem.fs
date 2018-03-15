@@ -42,6 +42,7 @@ module private Helpers =
             
 /// Representation of a path. Always an absolute, full, rooted path with normalized
 /// Separators (all backslashes converted to forward slashes)
+[<Struct>]
 type Path = 
     | Path of string
     [<Obsolete("use (string path)")>]
@@ -50,6 +51,7 @@ type Path =
         this |> function Path path -> path
 
 /// Representation of a path extension. Always includes the leading period (.). 
+[<Struct>]
 type Ext = 
     | Ext of string
     override this.ToString() = 
