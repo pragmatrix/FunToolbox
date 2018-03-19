@@ -312,12 +312,19 @@ module Regex =
 
     open System.Text.RegularExpressions
 
-    // http://www.fssnip.net/29/title/Regular-expression-active-pattern
-    let (|Match|_|) pattern input =
-        let m = Regex.Match(input, pattern)
+    let internal processMatchResult (m: Match) =
         if m.Success 
         then Some(List.tail [ for g in m.Groups -> g.Value ])
         else None
+
+    // http://www.fssnip.net/29/title/Regular-expression-active-pattern
+    let (|Match|_|) pattern input =
+        Regex.Match(input, pattern, RegexOptions.CultureInvariant)
+        |> processMatchResult
+
+    let (|MatchIgnoreCase|_|) pattern input =
+        Regex.Match(input, pattern, RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase)
+        |> processMatchResult
 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do
