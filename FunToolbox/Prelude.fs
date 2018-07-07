@@ -102,7 +102,7 @@ type System.Collections.Generic.List<'a> with
 
 module Dict = 
 
-    let inline tryFind (k: 'k) (d: Collections.Generic.Dictionary<'k, 'v>) = 
+    let inline tryFind (k: 'k) (d: Collections.Generic.IDictionary<'k, 'v>) = 
         match d.TryGetValue k with
         | true, v -> Some v
         | _ -> None
