@@ -100,6 +100,13 @@ type System.Collections.Generic.List<'a> with
         this.Clear()
         r
 
+module Dict = 
+
+    let inline tryFind (k: 'k) (d: Collections.Generic.Dictionary<'k, 'v>) = 
+        match d.TryGetValue k with
+        | true, v -> Some v
+        | _ -> None
+
 let inline flip f a b = f b a
 let inline curry f a b = f (a,b)
 let inline uncurry f (a,b) = f a b
