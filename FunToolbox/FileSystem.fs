@@ -141,5 +141,19 @@ module File =
         use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read ||| FileShare.Delete)
         use reader = new StreamReader(stream, encoding)
         reader.ReadToEnd()
+    
+    let ensureExists path = 
+       if not ^ Path.fileExists path then
+            failwithf "file '%s' does not exist" (string path)
 
+    /// Returns the time the file was last written to in UTC. Throws an exception
+    /// if the file does not exist.
+    let lastWriteTimeUTC path = 
+        ensureExists path
+        File.GetLastWriteTimeUtc(string path)
 
+    /// Returns the time the file was created in UTC. Throws an exception
+    /// if the file does not exist.
+    let creationTimeUTC path =
+        ensureExists path
+        File.GetCreationTimeUtc(string path)
