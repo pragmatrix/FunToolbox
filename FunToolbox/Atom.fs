@@ -3,7 +3,7 @@
 /// An atom represents an atomic mutable variable. 
 /// The basic definition (apply) can only modify a value and return it. 
 /// All other primitive operations like snapshot or reset implemented in terms of apply.
-/// 'v -> 'v is the modification, which returns the result (the 3rd 'v). 
+/// 'v -> 'v is the modification, which returns the resulting value (the 3rd 'v). 
 type 'v atom = ('v -> 'v) -> 'v
 
 module Atom =
@@ -31,18 +31,18 @@ module Atom =
         apply f a
         r
     
-    /// Return the current value of a Atom (also implemented via apply)
+    /// Return the current value of a Atom.
     let snapshot a = 
         applyAndSnapshot id a
 
-    /// Reset the value to the given one (implemented via apply)
+    /// Reset the value to the given one.
     let reset v a = 
         a
         |> apply (fun _ -> v)
         |> ignore
 
-    /// Generate a limited capability to modify an atom. This also returns an atom.
-    /// This is similar to a lense.
+    /// Generate a limited capability to modify a (subset of an existing atom). 
+    /// This also returns an atom and is similar to a lense.
     let limit (f: 's -> ('n -> 'n) -> 's) (s: 's atom) : ('n atom) =
         fun (m: 'n -> 'n) ->
             let mutable c = Unchecked.defaultof<'n>

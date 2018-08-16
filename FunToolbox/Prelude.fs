@@ -100,6 +100,13 @@ type System.Collections.Generic.List<'a> with
         this.Clear()
         r
 
+module Dict = 
+
+    let inline tryFind (k: 'k) (d: Collections.Generic.IDictionary<'k, 'v>) = 
+        match d.TryGetValue k with
+        | true, v -> Some v
+        | _ -> None
+
 let inline flip f a b = f b a
 let inline curry f a b = f (a,b)
 let inline uncurry f (a,b) = f a b
@@ -312,12 +319,19 @@ module Regex =
 
     open System.Text.RegularExpressions
 
-    // http://www.fssnip.net/29/title/Regular-expression-active-pattern
-    let (|Match|_|) pattern input =
-        let m = Regex.Match(input, pattern)
+    let internal processMatchResult (m: Match) =
         if m.Success 
         then Some(List.tail [ for g in m.Groups -> g.Value ])
         else None
+
+    // http://www.fssnip.net/29/title/Regular-expression-active-pattern
+    let (|Match|_|) pattern input =
+        Regex.Match(input, pattern, RegexOptions.CultureInvariant)
+        |> processMatchResult
+
+    let (|MatchIgnoreCase|_|) pattern input =
+        Regex.Match(input, pattern, RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase)
+        |> processMatchResult
 
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do

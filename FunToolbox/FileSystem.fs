@@ -42,6 +42,7 @@ module private Helpers =
             
 /// Representation of a path. Always an absolute, full, rooted path with normalized
 /// Separators (all backslashes converted to forward slashes)
+[<Struct>]
 type Path = 
     | Path of string
     [<Obsolete("use (string path)")>]
@@ -50,6 +51,7 @@ type Path =
         this |> function Path path -> path
 
 /// Representation of a path extension. Always includes the leading period (.). 
+[<Struct>]
 type Ext = 
     | Ext of string
     override this.ToString() = 
@@ -75,7 +77,7 @@ module Path =
 
     let parse str =
         let normalized = str |> normalizedPath
-        if not <| Helpers.isValidAbsolutePath normalized then
+        if not <| isValidAbsolutePath normalized then
             failwithf "'%s' is an invalid absolute path" normalized
         Path normalized
 
@@ -119,11 +121,13 @@ module Path =
 
     let ensureDirectoryOfPathExists (path: Path) =
         path |> parent |> ensureDirectoryExists
-        
+
+    [<Obsolete("use Directory.current")>]
     let currentDirectory() : Path = 
         Directory.GetCurrentDirectory()
         |> parse
         
+    [<Obsolete("use File.exists")>]
     let fileExists (Path path) = 
         File.Exists path
     
@@ -137,13 +141,16 @@ module File =
         stream.Read(array, 0, array.Length) |> expect array.Length
         array
     
-    let loadText (Path path) (encoding: System.Text.Encoding) =
+    let loadText (encoding: Text.Encoding) (Path path)  =
         use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read ||| FileShare.Delete)
         use reader = new StreamReader(stream, encoding)
         reader.ReadToEnd()
     
+    let exists (Path path) = 
+        File.Exists path
+
     let ensureExists path = 
-       if not ^ Path.fileExists path then
+       if not ^ exists path then
             failwithf "file '%s' does not exist" (string path)
 
     /// Returns the time the file was last written to in UTC. Throws an exception
@@ -157,3 +164,12 @@ module File =
     let creationTimeUTC path =
         ensureExists path
         File.GetCreationTimeUtc(string path)
+    
+module Directory = 
+
+    let current() = 
+        Directory.GetCurrentDirectory()
+        |> Path.parse
+
+    let exists (Path path) = 
+        Directory.Exists(path)
