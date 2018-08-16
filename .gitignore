@@ -3,7 +3,6 @@ obj/
 *.ncrunchproject
 /.vs/
 *.user
-/.paket/paket.exe
 /packages/
 /paket-files/
 /.paket/Paket.Restore.targets
