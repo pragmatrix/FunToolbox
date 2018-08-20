@@ -255,7 +255,7 @@ type Async with
                 return Some r
             }
 
-    static member Return = async.Return
+    static member Return(v) = async.Return(v)
 
 type MailboxProcessor<'t> with
     static member StartFold (f: 'state -> 'request -> 'state Async) initial = 
