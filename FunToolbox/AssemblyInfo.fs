@@ -8,7 +8,7 @@ open System.Runtime.InteropServices
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
 [<assembly: AssemblyProduct("FunToolbox")>]
-[<assembly: AssemblyCopyright("Copyright © 2015 Armin Sander")>]
+[<assembly: AssemblyCopyright("Copyright © 2018 Armin Sander")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
 
@@ -16,8 +16,8 @@ open System.Runtime.InteropServices
 
 [<assembly: Guid("060c0c2c-97c5-46bb-a139-464225480840")>]
 
-[<assembly: AssemblyVersion("1.2.1.0")>]
-[<assembly: AssemblyFileVersion("1.2.1.0")>]
+[<assembly: AssemblyVersion("1.2.2.0")>]
+[<assembly: AssemblyFileVersion("1.2.2.0")>]
 
 do
     ()

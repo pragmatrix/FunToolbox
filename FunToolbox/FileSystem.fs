@@ -136,15 +136,24 @@ module File =
     let loadBinary (Path path) = 
         use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read ||| FileShare.Delete)
         if stream.Length > (int64 Int32.MaxValue) then
-            failwith "stream too long"
+            failwithf "file too long (size: %d, max: %d)" stream.Length Int32.MaxValue
         let array = Array.zeroCreate (int stream.Length)
         stream.Read(array, 0, array.Length) |> expect array.Length
         array
+
+    let saveBinary (content: byte[]) (Path path) = 
+        use stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None ||| FileShare.Delete)
+        stream.Write(content, 0, content.Length)
     
-    let loadText (encoding: Text.Encoding) (Path path)  =
+    let loadText (encoding: Text.Encoding) (Path path) =
         use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read ||| FileShare.Delete)
         use reader = new StreamReader(stream, encoding)
         reader.ReadToEnd()
+
+    let saveText (encoding: Text.Encoding) (text: string) (Path path) =
+        use stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None ||| FileShare.Delete)
+        use writer = new StreamWriter(stream, encoding)
+        writer.Write(text)
     
     let exists (Path path) = 
         File.Exists path
