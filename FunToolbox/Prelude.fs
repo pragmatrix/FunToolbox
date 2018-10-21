@@ -11,11 +11,22 @@ type CRAttribute = CompilationRepresentationAttribute
 type RQAAttribute = RequireQualifiedAccessAttribute
 let [<Literal>] ModuleSuffix = CompilationRepresentationFlags.ModuleSuffix
 
+module T2 = 
+    let inline map fa fb (a, b) = fa a, fb b
+    let inline mapFst f t = map f id t
+    let inline mapSnd f t = map id f t
+
+module T3 = 
+    let inline map fa fb fc (a, b, c) = fa a, fb b, fc c
+    let inline mapFst f t = map f id id t
+    let inline mapSnd f t = map id f id t
+    let inline mapTrd f t = map id id f t
+
 module Fst =
-    let inline map f (fst, snd) = (f fst, snd)
+    let inline map f t = T2.mapFst f t
 
 module Snd = 
-    let inline map f (fst, snd) = (fst, f snd)
+    let inline map f t = T2.mapSnd f t
 
 module Option =
 
