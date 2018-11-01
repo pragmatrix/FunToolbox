@@ -1,4 +1,4 @@
-﻿namespace FunToolbox2.AssemblyInfo
+﻿namespace FunToolbox.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.InteropServices
