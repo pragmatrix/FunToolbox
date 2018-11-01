@@ -326,6 +326,32 @@ module Regex =
         Regex.Match(input, pattern, RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase)
         |> processMatchResult
 
+/// Text: Treat strings as if they were human readable text.
+module Text = 
+
+    /// Trim a string. Removes whitespace from the front and the back of the string.
+    let inline trim (string: string) : string = string.Trim()
+
+    /// true if the string does not contain any characters after trimming.
+    let inline isEmpty str = trim str = ""
+    /// true if the string contains any characters after trimming.
+    let inline isNotEmpty str = not ^ isEmpty str
+
+    /// IsEmpty if the string is empty after being trimmed, otherwise IsNotEmpty.
+    let inline (|IsEmpty|IsNotEmpty|) str = 
+        if isEmpty str
+        then IsEmpty
+        else IsNotEmpty
+
+    /// Concat text with a separator. 
+    /// Trims and filters input strings if they are empty before passing them to String.concat.
+    let concat separator strings = 
+        strings
+        |> Seq.map trim
+        |> Seq.filter isNotEmpty
+        |> String.concat separator
+
+
 [<assembly:AutoOpen("FunToolbox.Prelude")>]
 do ()
 
