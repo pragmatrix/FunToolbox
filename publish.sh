@@ -1,4 +1,5 @@
 #!/bin/bash
+# before publishing bump the version number in FunToolbox/AssemblyInfo.fs
 set -e
 MSBuild.exe FunToolbox.sln -t:Clean -p:Configuration=Release
 MSBuild.exe FunToolbox.sln -t:FunToolbox -p:Configuration=Release
