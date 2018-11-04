@@ -162,6 +162,9 @@ module File =
        if not ^ exists path then
             failwithf "file '%s' does not exist" (string path)
 
+    let delete (Path path) =    
+        File.Delete(path)
+
     /// Returns the time the file was last written to in UTC. Throws an exception
     /// if the file does not exist.
     let lastWriteTimeUTC path = 
@@ -182,3 +185,9 @@ module Directory =
 
     let exists (Path path) = 
         Directory.Exists(path)
+
+    let deleteIfEmpty (Path path) = 
+        Directory.Delete(path)
+
+    let deleteTree (Path path) = 
+        Directory.Delete(path, true)
