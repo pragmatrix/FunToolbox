@@ -63,12 +63,20 @@ type System.String with
         this.StartsWith(part, StringComparison.Ordinal)
     member this.endsWith part = 
         this.EndsWith(part, StringComparison.Ordinal)
+
+module Array =
+
+    let inline mapFst f = Array.map (Fst.map f)
+    let inline mapSnd f = Array.map (Snd.map f)
     
 module List =
     let rec revAndPrepend a l = 
         match a with
         | next :: rest -> revAndPrepend rest (next::l) 
         | [] -> l
+
+    let inline mapFst f = List.map (Fst.map f)
+    let inline mapSnd f = List.map (Snd.map f)
 
 module Seq = 
 
@@ -86,6 +94,9 @@ module Seq =
         | :? Collections.Generic.List<'e> -> s
         | s ->
             s |> materialize
+
+    let inline mapFst f = Seq.map (Fst.map f)
+    let inline mapSnd f = Seq.map (Snd.map f)
 
 type System.Collections.Generic.List<'a> with
     member this.TakeAll() = 

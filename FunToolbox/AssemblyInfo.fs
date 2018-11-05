@@ -16,8 +16,8 @@ open System.Runtime.InteropServices
 
 [<assembly: Guid("060c0c2c-97c5-46bb-a139-464225480840")>]
 
-[<assembly: AssemblyVersion("1.3.3.0")>]
-[<assembly: AssemblyFileVersion("1.3.3.0")>]
+[<assembly: AssemblyVersion("1.3.4.0")>]
+[<assembly: AssemblyFileVersion("1.3.4.0")>]
 
 do
     ()
