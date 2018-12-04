@@ -145,7 +145,11 @@ module File =
         use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read ||| FileShare.Delete)
         use reader = new StreamReader(stream, encoding)
         reader.ReadToEnd()
-    
+
+    let loadLines (encoding: Text.Encoding) (Path path) =
+       File.ReadAllLines(path, encoding)
+       |> Array.toList
+
     let exists (Path path) = 
         File.Exists path
 
