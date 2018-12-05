@@ -1,9 +1,8 @@
 #!/bin/bash
-# before publishing bump the version number in FunToolbox/AssemblyInfo.fs
+# before publishing bump the version number in FunToolbox/Funtoolbox.fsproj
 set -e
-MSBuild.exe FunToolbox.sln -t:Clean -p:Configuration=Release
-MSBuild.exe FunToolbox.sln -t:FunToolbox -p:Configuration=Release
 mkdir -p tmp
 rm -f tmp/*.nupkg
-(cd FunToolbox && ../.paket/paket pack ../tmp)
+(cd FunToolbox && dotnet clean -c Release)
+(cd FunToolbox && rm -rf obj bin && dotnet pack -c Release -o ../tmp)
 .paket/paket push --url https://www.myget.org/F/pragmatrix/api/v2/package --api-key $MYGETAPIKEY tmp/*.nupkg

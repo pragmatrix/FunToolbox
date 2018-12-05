@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <Version>1.4.0</Version>
+    <Copyright>(c) 2018 Armin Sander</Copyright>
+    <PaketRestoreDisabled Condition="'$(NCrunch)' == '1'">True</PaketRestoreDisabled>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Prelude.fs" />
     <Compile Include="Lifetime.fs" />
     <Compile Include="Atom.fs" />
@@ -20,6 +22,8 @@
     <None Include="paket.references" />
   </ItemGroup>
 
+ 
   <Import Project="..\.paket\Paket.Restore.targets" />
+
 
 </Project>
