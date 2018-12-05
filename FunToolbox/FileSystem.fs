@@ -155,6 +155,10 @@ module File =
         use writer = new StreamWriter(stream, encoding)
         writer.Write(text)
     
+    let loadLines (encoding: Text.Encoding) (Path path) =
+       File.ReadAllLines(path, encoding)
+       |> Array.toList
+
     let exists (Path path) = 
         File.Exists path
 
