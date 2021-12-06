@@ -1,6 +1,7 @@
 bin/
 obj/
 *.ncrunchproject
+*.ncrunchsolution
 /.vs/
 *.user
 /packages/

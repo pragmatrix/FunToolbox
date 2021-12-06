@@ -1,8 +1,8 @@
-version 5.193.0
-
 source https://www.nuget.org/api/v2/
-framework: netcoreapp2.0, netstandard2.0, net452
-nuget FSharp.Core
-nuget FsUnit.xUnit
-nuget Microsoft.NET.Test.Sdk
-nuget xunit.runner.visualstudio
+
+framework: netstandard2.0, net6.0
+
+nuget FSharp.Core ~> 6.0.1 content:none
+nuget FsUnit.xUnit ~> 4.1.0
+nuget Microsoft.NET.Test.Sdk ~> 17.0.0
+nuget xunit.runner.visualstudio ~> 2.4.3

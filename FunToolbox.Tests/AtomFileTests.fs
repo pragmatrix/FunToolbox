@@ -17,8 +17,9 @@ let wouldBlockForeverWhenFileIsLocked() =
     thread.Start()
     Thread.Sleep(100)
     thread.IsAlive |> should be True
-    thread.Abort()
-    thread.Join()
+    // Can't use thread.Abort() this throws PlatformNotSupportedException
+    // thread.Abort()
+    // thread.Join()
 
 [<Fact>]
 let counterTest() = 

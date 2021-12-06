@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>1.4.0</Version>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Version>1.4.1</Version>
     <Copyright>(c) 2018 Armin Sander</Copyright>
-    <PaketRestoreDisabled Condition="'$(NCrunch)' == '1'">True</PaketRestoreDisabled>
   </PropertyGroup>
 
   <ItemGroup>
