@@ -28,8 +28,8 @@ module private Helper =
                 // be very specific about the error we tolerate here!
                 | :? IOException as e ->
                 // 0x80070020: ERROR_SHARING_VIOLATION Windows
-                // 0x80070005: ERROR_ACCESS_DENIED Linux
-                if e.HResult = 0x80070020 || e.HResult = 0x80070005
+                // 0x0000000b: EAGAIN Linux
+                if e.HResult = 0x80070020 || e.HResult = 0xb
                 then null
                 else reraise()
         // we can not tail-recurse in exception handlers, so we do that here
