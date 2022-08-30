@@ -1,5 +1,5 @@
 #!/bin/bash
-# before publishing bump the version number in FunToolbox/Funtoolbox.fsproj
+# before publishing bump the version number in FunToolbox/FunToolbox.fsproj
 set -e
 mkdir -p tmp
 rm -f tmp/*.nupkg
