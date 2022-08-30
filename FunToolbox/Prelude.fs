@@ -132,6 +132,17 @@ module Result =
             try Ok ^ f p
             with e -> Error e
     
+    let inline unwrap (r: Result<'r, _>) : 'r =
+        match r with
+        | Ok(r) -> r
+        | Error(err) -> failwith err
+
+    let inline expect (err: 'a) (r: Result<'r, _>) : 'r =
+        match r with
+        | Ok(r) -> r
+        // TODO: Don't swallow the actual error.
+        | Error(_) -> failwithf "%O" err
+
 //
 // IDisposable
 //
