@@ -17,8 +17,7 @@ let wouldBlockForeverWhenFileIsLocked() =
     thread.Start()
     Thread.Sleep(100)
     thread.IsAlive |> should be True
-    thread.Abort()
-    thread.Join()
+    // .net6.0 does not support `thread.Abort()`, relying on the testrunner to kill the thread.
 
 [<Fact>]
 let counterTest() = 
