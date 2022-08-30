@@ -36,18 +36,17 @@ module Atom =
         applyAndSnapshot id a
 
     /// Reset the value to the given one.
-    let reset v a = 
+    let reset v a : unit = 
         a
         |> apply (fun _ -> v)
-        |> ignore
-
+        
     /// Generate a limited capability to modify a (subset of an existing atom). 
     /// This also returns an atom and is similar to a lense.
-    let limit (f: 's -> ('n -> 'n) -> 's) (s: 's atom) : ('n atom) =
+    let limit (f: 's -> ('n -> 'n) -> 's) (s: 's atom) : 'n atom =
         fun (m: 'n -> 'n) ->
             let mutable c = Unchecked.defaultof<'n>
             let mCapture v = c <- m v; c
-            apply (fun s -> f s mCapture) s |> ignore
+            apply (fun s -> f s mCapture) s
             c 
 
     /// Generate a function that returns snapshots of an atom when called.

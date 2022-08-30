@@ -13,7 +13,7 @@ let wouldBlockForeverWhenFileIsLocked() =
     let fn = "test.atomfile"
     use fs = File.Open(fn, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)
 
-    let thread = new Thread(fun () -> AtomFile.swap id fn |> ignore)
+    let thread = Thread(fun () -> AtomFile.swap id fn |> ignore)
     thread.Start()
     Thread.Sleep(100)
     thread.IsAlive |> should be True
@@ -45,8 +45,8 @@ let counterTest() =
         countAddThread (cnt+1)
 
 
-    let thread1 = new Thread(fun () -> countAddThread 0)
-    let thread2 = new Thread(fun () -> countAddThread 0)
+    let thread1 = Thread(fun () -> countAddThread 0)
+    let thread2 = Thread(fun () -> countAddThread 0)
     thread1.Start()
     thread2.Start()
 
@@ -58,4 +58,4 @@ let counterTest() =
     let data = AtomFile.read fn
     data.IsSome |> should be True
     let value = data.Value |> fun bytes -> Encoding.UTF8.GetString(bytes)
-    System.Console.WriteLine("counter: " + value)
+    Console.WriteLine("counter: " + value)

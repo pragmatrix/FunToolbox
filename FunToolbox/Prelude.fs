@@ -40,13 +40,13 @@ module Option =
         | None -> false
 
     /// Returns Some v if the value can be cast to the given type.
-    let inline cast<'rt> (v: obj) : ('rt option) = 
+    let inline cast<'rt> (v: obj) : 'rt option = 
         match v with
         | :? 'rt as v -> Some v
         | _ -> None
 
     /// returns None when an exception happens while computing the result.
-    let inline tryWith (f: unit -> 'r) : ('r option) = 
+    let inline tryWith (f: unit -> 'r) : 'r option = 
         try Some <| f()
         with _ -> None
 
@@ -58,7 +58,7 @@ let inline (--) a b = a b
 let (^) = (<|)
 
 // ordinal startsWith / endsWith for strings
-type System.String with
+type String with
     member this.startsWith part = 
         this.StartsWith(part, StringComparison.Ordinal)
     member this.endsWith part = 
@@ -120,7 +120,7 @@ let (<&>) f g = (fun x -> f x && g x)
 
 let inline expect expected seen = 
     if expected <> seen then
-        failwithf "internal error, unexpected state, expected %A, but seen %A" expected seen
+        failwithf $"Internal error, unexpected state, expected %A{expected}, but seen %A{seen}"
 
 module Result = 
     let inline bind c = function Ok r -> c r | Error e -> Error e
@@ -132,6 +132,17 @@ module Result =
             try Ok ^ f p
             with e -> Error e
     
+    let inline unwrap (r: Result<'r, _>) : 'r =
+        match r with
+        | Ok(r) -> r
+        | Error(err) -> failwith err
+
+    let inline expect (err: 'a) (r: Result<'r, _>) : 'r =
+        match r with
+        | Ok(r) -> r
+        // TODO: Don't swallow the actual error.
+        | Error(_) -> failwithf $"{err}"
+
 //
 // IDisposable
 //
