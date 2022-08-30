@@ -9,7 +9,6 @@
     <Compile Include="SortedArrayTests.fs" />
     <Compile Include="AtomFileTests.fs" />
     <Compile Include="AlgorithmsTests.fs" />
-    <Content Include="app.config" />
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

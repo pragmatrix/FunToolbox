@@ -73,7 +73,5 @@ let testProbabilities(probability: int, expected: string) =
     let sum = Probability.sum testTable
     sum |> should equal (testTable |> List.map fst |> List.sum)
     let index = Probability.select probability testTable
-    let value = snd testTable.[index]
+    let value = snd testTable[index]
     value |> should equal expected
-
-            

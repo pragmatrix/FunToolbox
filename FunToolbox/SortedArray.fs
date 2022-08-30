@@ -60,7 +60,7 @@ module SortedArray =
         let upper = upperBound high sa
         let a = sa |> toArray
         seq {lower..upper-1}
-        |> Seq.map (fun i -> a.[i])
+        |> Seq.map (fun i -> a[i])
 
     /// Returns Some index if the value is in the array, otherwise None
     let indexOf (value: 'v) (sa: 'v sarray) : int option = 
