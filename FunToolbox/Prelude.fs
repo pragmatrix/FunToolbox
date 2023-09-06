@@ -50,7 +50,7 @@ module Option =
         try Some <| f()
         with _ -> None
 
-/// Equivalent to the <| operator, but with a more useful priority to separate funs, etc.
+/// Equivalent to the <| operator, but with a more useful priority to separate functions, etc.
 [<Obsolete("Use ^ instead")>]
 [<DebuggerStepThrough>]
 let inline (--) a b = a b
@@ -141,7 +141,7 @@ module Result =
         match r with
         | Ok(r) -> r
         // TODO: Don't swallow the actual error.
-        | Error(_) -> failwithf $"{err}"
+        | Error _ -> failwith $"{err}"
 
 //
 // IDisposable
@@ -151,7 +151,7 @@ module Result =
 /// that can be used for `use` constructs.
 let inline asDisposable f = 
     { new IDisposable with
-        member __.Dispose() = f() }
+        member _.Dispose() = f() }
 
 let inline dispose (disposable: #IDisposable) = 
     disposable.Dispose()
@@ -159,12 +159,12 @@ let inline dispose (disposable: #IDisposable) =
 module DisposeChain =
     type T() = 
         let mutable chain = []
-        member __.Use (disp: #IDisposable) =
-            chain <- (disp :> IDisposable) :: chain
-            disp
+        member _.Use (disposable: #IDisposable) =
+            chain <- (disposable :> IDisposable) :: chain
+            disposable
 
-        member __.Push (disp: #IDisposable) =
-            chain <- (disp :> IDisposable) :: chain
+        member _.Push (disposable: #IDisposable) =
+            chain <- (disposable :> IDisposable) :: chain
 
         member this.Dispose() = 
             (this :> IDisposable).Dispose()
@@ -198,17 +198,15 @@ module Agent =
 type AsyncBuilder with
     
     [<DebuggerStepThrough>]
-    member __.Source(a: Async<'r>) : Async<'r> = 
-        a
+    member _.Source(a: Async<'r>) : Async<'r> = a
 
     [<DebuggerStepThrough>]
-    member __.Source(s: 'e seq) : 'e seq =
-        s
+    member _.Source(s: 'e seq) : 'e seq = s
 
-    member __.Source(t: Task<'r>) : Async<'r> = 
+    member _.Source(t: Task<'r>) : Async<'r> = 
         Async.AwaitTask t
 
-    member __.Source(t: Task) : Async<unit> = 
+    member _.Source(t: Task) : Async<unit> = 
         Async.AwaitTask t
 
 //
@@ -283,18 +281,19 @@ type MailboxProcessor<'t> with
         }
         loop initial
 
-// https://github.com/fsprojects/FSharpx.Extras/blob/master/src/FSharpx.Extras/ComputationExpressions/Monad.fs
+// <https://github.com/fsprojects/FSharpx.Extras/blob/master/src/FSharpx.Extras/ComputationExpressions/Monad.fs>
 /// The maybe monad.
 /// This monad is my own and uses an 'T option. Others generally make their own Maybe<'T> type from Option<'T>.
-/// The builder approach is from Matthew Podwysocki's excellent Creating Extended Builders series http://codebetter.com/blogs/matthew.podwysocki/archive/2010/01/18/much-ado-about-monads-creating-extended-builders.aspx.
+/// The builder approach is from Matthew Podwysocki's excellent Creating Extended Builders series:
+/// <http://codebetter.com/blogs/matthew.podwysocki/archive/2010/01/18/much-ado-about-monads-creating-extended-builders.aspx>.
 type MaybeBuilder() =
-    member __.Return(x) = Some x
-    member __.ReturnFrom(m: 'T option) = m
-    member __.Bind(m, f) = Option.bind f m
-    member __.Zero() = None
-    member __.Combine(m, f) = Option.bind f m
-    member __.Delay(f: unit -> _) = f
-    member __.Run(f) = f()
+    member _.Return(x) = Some x
+    member _.ReturnFrom(m: 'T option) = m
+    member _.Bind(m, f) = Option.bind f m
+    member _.Zero() = None
+    member _.Combine(m, f) = Option.bind f m
+    member _.Delay(f: unit -> _) = f
+    member _.Run(f) = f()
     member this.TryWith(m, h) =
         try this.ReturnFrom(m)
         with e -> h e
@@ -302,7 +301,7 @@ type MaybeBuilder() =
         try this.ReturnFrom(m)
         finally compensation()
     member this.Using(res:#IDisposable, body) =
-        this.TryFinally(body res, fun () -> match res with null -> () | disp -> disp.Dispose())
+        this.TryFinally(body res, fun () -> match res with null -> () | disposable -> disposable.Dispose())
     member this.While(guard, f) =
         if not (guard()) then Some () else
         do f() |> ignore

@@ -45,7 +45,7 @@ let create (initial: 'state) : Agent<'state> =
 type Agent<'state> with
     /// Execute the state update function f inside the agent's context.
     /// Note: even though Update returns an async, the ordering of the updates is synchronized 
-    /// with the ordering of the update calls (the message that is sent to the mailboxprocess is placed
+    /// with the ordering of the update calls (the message that is sent to the mailbox processor is placed
     /// in its queue before this function returns).
     member this.Update f =
         this.Agent.PostAndAsyncReply 

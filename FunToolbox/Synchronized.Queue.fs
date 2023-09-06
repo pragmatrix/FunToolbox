@@ -52,7 +52,7 @@ type Queue<'item>() =
                 r
             )
 
-    /// Dequeues all the items from the queue. Never blocks and returns an empty list of no itesm are available.
+    /// Dequeues all the items from the queue. Never blocks and returns an empty list of no items are available.
     member this.DequeueAllNoWait() = 
         lock monitor (
             fun() ->

@@ -41,7 +41,7 @@ module Atom =
         |> apply (fun _ -> v)
         
     /// Generate a limited capability to modify a (subset of an existing atom). 
-    /// This also returns an atom and is similar to a lense.
+    /// This also returns an atom and is similar to a lens.
     let limit (f: 's -> ('n -> 'n) -> 's) (s: 's atom) : 'n atom =
         fun (m: 'n -> 'n) ->
             let mutable c = Unchecked.defaultof<'n>

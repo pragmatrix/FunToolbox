@@ -1,7 +1,7 @@
 ﻿/// A module to manage object lifetimes.
 ///
 /// The basic assumption is that "inner" lifetime are docked to "outer" lifetime scopes and
-/// so their lifetime is combined into one handle that refers to the "inner" instace. When
+/// so their lifetime is combined into one handle that refers to the "inner" instance. When
 /// This handle is disposed, the "inner" lifetime is disposed before the "outer" instance. 
 /// Construction is from "outside" to "inside". Destruction is always the other way around.
 /// This can be used with `use` construct in the following way given Outer() and Inner() return
