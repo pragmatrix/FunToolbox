@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.5.0</Version>
-    <Copyright>(c) 2018 Armin Sander</Copyright>
+    <Version>1.6.0</Version>
+    <Copyright>(c) 2023 Armin Sander</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="Prelude.fs" />
+    <Compile Include="Subset.fs" />
     <Compile Include="Lifetime.fs" />
     <Compile Include="Atom.fs" />
     <Compile Include="AtomFile.fs" />
