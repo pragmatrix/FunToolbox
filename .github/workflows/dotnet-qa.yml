@@ -3,7 +3,7 @@ name: dotnet qa
 on: [push]
 
 jobs:
-  build:
+  qa:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
