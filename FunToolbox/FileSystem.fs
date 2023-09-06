@@ -62,7 +62,7 @@ module Ext =
     let tryParse str = 
         match () with
         | _ when not ^ isValidName str
-            -> Error ^ sprintf "'%s': extension contains invalid filename characters" str
+            -> Error $"'{str}': extension contains invalid filename characters"
         | _ when not ^ str.startsWith "."
             -> Ok ^ Ext("." + str)
         | _ -> Ok ^ Ext str
@@ -78,7 +78,7 @@ module Path =
     let parse str =
         let normalized = str |> normalizedPath
         if not <| isValidAbsolutePath normalized then
-            failwithf "'%s' is an invalid absolute path" normalized
+            failwith $"'{normalized}' is an invalid absolute path"
         Path normalized
 
     let map (f: string -> string) (Path path) = 
@@ -102,7 +102,7 @@ module Path =
     let split (path: Path) = 
         path |> parent, path |> name
 
-    /// Changes the extension of the path. The extension may include the leading perion (.).
+    /// Changes the extension of the path. The extension may include the leading period (.).
     /// If the extension is empty, the current extension is removed from the path.        
     let withExtension (ext: string) (path: Path) = 
         path
@@ -136,7 +136,7 @@ module File =
     let loadBinary (Path path) = 
         use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read ||| FileShare.Delete)
         if stream.Length > (int64 Int32.MaxValue) then
-            failwithf "file too long (size: %d, max: %d)" stream.Length Int32.MaxValue
+            failwith $"file too long (size: {stream.Length}, max: {Int32.MaxValue})"
         let array = Array.zeroCreate (int stream.Length)
         stream.Read(array, 0, array.Length) |> expect array.Length
         array
@@ -164,7 +164,7 @@ module File =
 
     let ensureExists path = 
        if not ^ exists path then
-            failwithf "file '%s' does not exist" (string path)
+            failwith $"file '{path}' does not exist"
 
     let delete (Path path) =    
         File.Delete(path)
