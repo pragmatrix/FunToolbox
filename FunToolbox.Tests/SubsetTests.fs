@@ -8,11 +8,11 @@ open FunToolbox
 let subset() =
     let nums = [0; 1; 2; 3; 4;5 ]
     let oddM2 n = if (n % 2) = 1 then Some 2 else None
-    let subset = nums |> Subset.select oddM2
+    let mapping, subset = nums |> Subset.select oddM2
     let oddM2 =
-        subset
+        (nums, subset)
         |> Subset.integrate
-             nums
+             mapping
              (fun (n, o) ->
                 match o with
                 | Some(m) -> n * m
@@ -21,14 +21,14 @@ let subset() =
     oddM2 |> shouldEqual [0; 2; 2; 6; 4; 10]
 
 [<Fact>]
-let ``empty subset``() =
+let ``Empty subset``() =
     let nums = [0; 1; 2; 3; 4; 5]
     let selector _ = None
-    let subset = nums |> Subset.select selector
+    let mapping, subset = nums |> Subset.select selector
     let nums2 =
-        subset
+        (nums, subset)
         |> Subset.integrate
-             nums
+             mapping
              (fun (n, o) ->
                 match o with
                 | Some(m) -> n * m
@@ -36,14 +36,14 @@ let ``empty subset``() =
     nums2 |> shouldEqual nums
 
 [<Fact>]
-let ``subset with all Some``() =
+let ``Subset with all Some``() =
     let nums = [0; 1; 2; 3; 4; 5]
     let selector _ = Some 2
-    let subset = nums |> Subset.select selector
+    let mapping, subset = nums |> Subset.select selector
     let m2 =
-        subset
+        (nums, subset)
         |> Subset.integrate
-             nums
+             mapping
              (fun (n, o) ->
                 match o with
                 | Some(m) -> n * m
@@ -51,39 +51,57 @@ let ``subset with all Some``() =
     m2 |> shouldEqual [0; 2; 4; 6; 8; 10]
 
 [<Fact>]
-let ``subset with different superset``() =
+let ``Integration with different superset``() =
     let nums = [0; 1; 2; 3; 4; 5]
     let oddM2 n = if (n % 2) = 1 then Some 2 else None
     
-    let subset = nums |> Subset.select oddM2
+    let mapping, subset = nums |> Subset.select oddM2
     
     let oddM2 =
-        subset
+        ([0; 2; 4; 6; 8; 10], subset)
         |> Subset.integrate
-             [0; 2; 4; 6; 8; 10]
-             (fun (n, o) ->
+            mapping  
+            ^ fun (n, o) ->
                 match o with
                 | Some(m) -> n * m
-                | None -> n) 
+                | None -> n
 
     oddM2 |> shouldEqual [0; 4; 4; 12; 8; 20]
 
 [<Fact>]
-let ``subset with a superset integration of a different length fails``() =
+let ``Integration with a superset of a different length fails``() =
 
     let nums = [0; 1; 2; 3; 4; 5]
     let oddM2 n = if (n % 2) = 1 then Some 2 else None
     
-    let subset = nums |> Subset.select oddM2
+    let mapping, subset = nums |> Subset.select oddM2
 
     Assert.Throws<exn>(fun () ->    
-        subset
+        ([0; 2; 4; 6; 8], subset)
         |> Subset.integrate
-             [0; 2; 4; 6; 8]
-             (fun (n, o) ->
+            mapping    
+            ^ fun (n, o) ->
                 match o with
                 | Some(m) -> n * m
-                | None -> n)
+                | None -> n
+        |> ignore
+    )
+
+[<Fact>]
+let ``Integration with a subset of a different length fails``() =
+    let nums = [0; 1; 2; 3; 4; 5]
+    let oddM2 n = if (n % 2) = 1 then Some 2 else None
+    
+    let mapping, subset = nums |> Subset.select oddM2
+
+    Assert.Throws<exn>(fun () ->    
+        (nums, [2; 3])
+        |> Subset.integrate
+            mapping    
+            ^ fun (n, o) ->
+                match o with
+                | Some(m) -> n * m
+                | None -> n
         |> ignore
     )
 
@@ -92,12 +110,12 @@ let ``empty superset``() =
     let nums = []
     let oddM2 n = if (n % 2) = 1 then Some 2 else None
     
-    let subset = nums |> Subset.select oddM2
+    let mapping, subset = nums |> Subset.select oddM2
 
     let r =
-        subset
+        ([], subset)
         |> Subset.integrate
-             []
+             mapping
              (fun (n, o) ->
                 match o with
                 | Some(m) -> n * m
