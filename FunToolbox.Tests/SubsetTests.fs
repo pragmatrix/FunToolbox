@@ -1,6 +1,6 @@
 module FunToolbox.Tests.SubsetTests
 
-open FsUnit.Xunit
+open FsUnitTyped
 open Xunit
 open FunToolbox
 
@@ -18,7 +18,7 @@ let subset() =
                 | Some(m) -> n * m
                 | None -> n) 
 
-    oddM2 |> should equal [0; 2; 2; 6; 4; 10]
+    oddM2 |> shouldEqual [0; 2; 2; 6; 4; 10]
 
 [<Fact>]
 let ``empty subset``() =
@@ -33,7 +33,7 @@ let ``empty subset``() =
                 match o with
                 | Some(m) -> n * m
                 | None -> n) 
-    nums2 |> should equal nums
+    nums2 |> shouldEqual nums
 
 [<Fact>]
 let ``subset with all Some``() =
@@ -48,7 +48,7 @@ let ``subset with all Some``() =
                 match o with
                 | Some(m) -> n * m
                 | None -> n) 
-    m2 |> should equal [0; 2; 4; 6; 8; 10]
+    m2 |> shouldEqual [0; 2; 4; 6; 8; 10]
 
 [<Fact>]
 let ``subset with different superset``() =
@@ -66,7 +66,7 @@ let ``subset with different superset``() =
                 | Some(m) -> n * m
                 | None -> n) 
 
-    oddM2 |> should equal [0; 4; 4; 12; 8; 20]
+    oddM2 |> shouldEqual [0; 4; 4; 12; 8; 20]
 
 [<Fact>]
 let ``subset with a superset integration of a different length fails``() =
@@ -103,5 +103,4 @@ let ``empty superset``() =
                 | Some(m) -> n * m
                 | None -> n) 
 
-    r |> should equal (let x : int list = [] in x)
-
+    r |> shouldBeEmpty
