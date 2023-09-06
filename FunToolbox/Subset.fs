@@ -5,13 +5,13 @@ module FunToolbox.Subset
 type 'a subset = {
     /// A subset of a superset.
     Subset: 'a list
-    /// A list of flags that indicate which entries of the superset exists in the subset.
+    /// Flags that indicate which entries of the superset exists in the subset.
     Filter: bool list
 }
 
 /// Select a new subset from a superset.
 ///
-/// - `superset` The superset.
+/// - `superset` The superset that has the same length as the original superset from which the subset was created from.
 /// - `selector` Chooses the subsets items for the superset's items.
 let select (selector: 'i -> 'a option) (superset: 'i list) : 'a subset =
 
@@ -34,8 +34,8 @@ let select (selector: 'i -> 'a option) (superset: 'i list) : 'a subset =
     
 /// Integrate the subset back to _a_ superset.
 ///
-/// The superset do not need to be equal to the original superset that was used to create the subset, but it must have the same
-/// length as the the original superset from which the subset got created.
+/// The superset do not need to be equal to the original superset that was used to create the subset, but it's length
+/// must be the same as the original superset from which the subset got created.
 let integrate (superset: 'i list) (apply: 'i * 'a option -> 'r) (subsetIn: 'a subset): 'r list =
     
     let rec integrate result filter subset todo =
