@@ -1,6 +1,12 @@
 #!/bin/bash
 # before publishing bump the version number in FunToolbox/FunToolbox.fsproj
 set -e
+
+if [ -z "$MYGETAPIKEY" ]; then
+  echo "MYGETAPIKEEY is not set or empty."
+  exit 1
+fi
+
 mkdir -p tmp
 rm -f tmp/*.nupkg
 (cd FunToolbox && dotnet clean -c Release)
